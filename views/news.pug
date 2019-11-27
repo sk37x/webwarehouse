@@ -1,0 +1,47 @@
+extends layout
+
+block content
+
+    section.img-head.p-all-10.p-t-150.p-b-135.flex-c-m(style="background-image: url(images/bg/bg-reservation.jpg)")
+        h2.tit3cpcolwhite.t-center news
+    
+    section.section-reservation
+        .container-fluid
+            .row
+                .col-12
+                    h4.tit2.t-center news
+                    h4.tit3.cpsp.t-center news tab
+    
+        .container
+            form.flex-c-m(action="")
+                .row
+                    .form-group.col-md-4.p-t-30
+                        h5 Date
+                        input(type="text" class="form-control btn-secondary ui-buttonx border-r-10 trans-2" id="dateCin" placeholder="MM/DD/YYYY" style="text-align: left;")    
+                    .form-group.col-md-4.p-t-30
+                        h5 Time
+                        select(type="text" class="form-control btn-secondary ui-buttonx border-r-10 trans-2" id="timeCin")
+                            option(value selected)
+                            option(value="") 10:00
+                            option(value="") 11:00
+                    .form-group.col-md-4.p-t-30
+                        h5 People
+                        select(type="number" class="form-control btn-secondary ui-buttonx border-r-10 trans-2" id="peopleCin")
+                            option(value selected)
+                            option(value="this.peopleCin") 1 Person
+                            option(value="") 2 Person
+                    .form-group.col-md-4.p-t-30
+                        h5 Name
+                        input(type="text" class="form-control border-r-10" id="yName" placeholder="Name")
+                    .form-group.col-md-4.p-t-30
+                        h5 Phone
+                        input(type="text" class="form-control border-r-10" id="phoneNum" placeholder="Phone")
+                    .form-group.col-md-4.p-t-30
+                        h5 E-mail
+                        input(type="text" class="form-control border-r-10" id="yEmail" placeholder="E-mail")
+                    .form-group.flex-c-m.col-12.m-t-13
+                        button(type="button" class="btn btn-dark border-r-10 p-all-10" style="width:120px; height: 50px;") SUBMIT
+
+
+
+    

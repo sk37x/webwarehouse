@@ -1,0 +1,104 @@
+doctype html
+html(lang="th")
+
+    head
+        meta(charset='UTF-8')
+        title HOTEL
+        link(rel='stylesheet', type='text/css' href='/stylesheets/admin.css')
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", crossorigin="anonymous")
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous")
+        link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+        //- <!-- Latest compiled and minified CSS -->
+        link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css")
+
+
+        block style
+
+
+    body
+        header.admin-head
+            .admin-head-wrap
+                span.m-a-10(style='margin: 10px')
+                    h1 HOTEL
+                span.flex-c-m(class='contentTop', style='height:100%;float:right;padding:10px')
+                    //- h3 sk37.x ADMIN
+                    //- a.text-decor-none(href='/backendx/logout', style='color:white')
+                    div(id="show-hide-blockx" style='color:white;cursor:pointer')
+                        span.blockx-images
+                        span(class='btxNowUser', style='text-transform: uppercase') 
+                        //- button.btn.btn-primary sk37.x ADMIN
+            .blockx-userx
+                .ui-headerx.t-center
+                    span.blockx-imagesx
+                    span.flex-c-m.btxNowUser(style='color:white')
+                .ui-headerx-btn
+                    button.btn.btn-primary(style='float:left') Profile
+                    a.text-decor-none(href='/backendx/logout' style='float:right; color:white')
+                        button.btn.btn-danger Sign Out
+        nav.admin-nav
+            .con-ad.flex-c-m.m-a-10
+                span.blockx-images(style='float:left')
+                span.btxNowUserx.txtth-sm(style='text-transform: uppercase') 
+                
+            .con-ad.m-a-10.t-center(style='clear:both')
+                a.text-decor-none(href="/backendx")
+                    h5.txtlst.trans-2.m-t-8 หน้าแรก
+            .lst-admin
+                .lst-item
+                    .lst-first
+                        span Booking
+                    ul
+                        a.text-decor-none(href='/backendx/booking/allbook/all-list')
+                            li รายการจอง
+                    .lst-first
+                        span จัดการห้องพัก
+                    ul
+                        a.text-decor-none(href="/backendx/manageroom/manage-rooms")
+                            li จัดการประเภทห้องพัก      
+                        a.text-decor-none(href="/backendx/manageroom/manage-public-utility")
+                            li จัดการสาธารณูปโภค
+                        a.text-decor-none(href="/backendx/manageroom/manageroomsx")
+                            li จัดการห้องพัก
+                    .lst-first
+                        span รายงาน
+                    ul
+                        a.text-decor-none(href='/backendx/report/reservation')    
+                            li ยอดการจอง
+                        a.text-decor-none(href='/backendx/report/totalprice')
+                            li ยอดเงิน
+                        a.text-decor-none(href='/backendx/report/bookformat')
+                            li รูปแบบการจอง
+                    #system-admin
+                        .lst-first
+                            span จัดการสมาชิก
+                        ul
+                            a.text-decor-none(href='/backendx/user/level')
+                                li ระดับสมาชิก
+                            a.text-decor-none(href='/backendx/user/position')
+                                li จัดการตำแหน่ง
+                            a.text-decor-none(href='/backendx/user/manage')
+                                li จัดการสมาชิก
+        
+        section.sec-admin-main
+            .admin-main-wrap
+
+            
+                block content
+
+
+        
+
+        script(src="/javascripts/jquery-3.2.1.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js")
+        script(src="/javascripts/jquery.ajax.js")
+        script(src="/javascripts/jquery.mainxs.js")
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js')
+        script(src='/javascripts/jquery.chart.js')
+        script(src='/javascripts/jquery-ui-1.12.1/jquery-ui.js')
+        //- script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
+        script(src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js')
+        script(src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js")
+        

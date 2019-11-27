@@ -1,0 +1,44 @@
+extends layout
+
+block content
+    title = title
+
+    section.img-head.p-all-10.p-t-150.p-b-135.flex-c-m(style="background-image: url(images/bg/bg-contact.jpg)")
+        h2.tit3cpcolwhite.t-center contact
+
+    section.section-contact
+        .container-fluid
+            .row
+                .col-12
+                    .gmap
+                        #map-canvas(style="height:400px")
+            .row
+                .col-12.p-t-50
+                    .warp-text
+                        h3.tit3 SEND US A MESSAGE
+
+        .container
+            form.flex-c-m
+                .row
+                    .form-group.col-md-4.p-t-30
+                        label First Name
+                        input(type="text" class="form-control border-r-10" id="firstName" placeholder="First Name")
+                    .form-group.col-md-4.p-t-30
+                        label Last Name
+                        input(type="text" class="form-control border-r-10" id="lastName" placeholder="Last Name")
+                    .form-group.col-md-4.p-t-30
+                        label First Name
+                        input(type="number" class="form-control border-r-10" id="phoneNum" placeholder="Phone")
+                    .form-group.col-12
+                        label Message
+                        textarea(class="form-control min-h-150 p-t-30 p-l-30 border-r-10" id="msgUser" placeholder="Message")
+                    .form-group.flex-c-m.col-12.m-t-13
+                        button(type="button" class="btn btn-dark border-r-10 p-all-10" style="width:120px; height: 50px;") SUBMIT
+
+
+    script(src="/javascripts/jquery-3.2.1.min.js")
+    script(src="/javascripts/jquery.gmap-api.js")
+    script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-Dfn9y2OQOOa0gw39-QBDvDoeKJftwIQ&callback=initialize")
+    
+    
+        

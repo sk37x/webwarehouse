@@ -1,0 +1,414 @@
+extends layoutuser
+
+block content
+
+
+
+    if bookingall || bookstat
+        //- Main Page this!! | working list-all
+        .container-fluid
+            .row
+                .col
+                    h2 รายการจอง
+            
+        .con-block
+            .container-fluid(style='margin-top: 12px')
+                .row(style='margin-bottom: 15px;')
+                    .col-2
+                        a.text-decor-none(href="/backendx/booking/allbook/wait-check-in")
+                            button.btn.btn-primary.btn-block(type="button")
+                                span WAIT CHECK IN
+                    .col-2
+                        a.text-decor-none(href="/backendx/booking/allbook/check-in")
+                            button.btn.btn-success.btn-block(type="button")
+                                span CHECK IN LIST
+                    .col-2
+                        a.text-decor-none(href="/backendx/booking/allbook/check-out")
+                            button.btn.btn-warning.btn-block(type="button")
+                                span CHECK OUT LIST
+                .row(style='margin-top: 15px;')
+                    .col-3.form-group
+                        span.m-r-6.txtth5 Show
+                        select.m-r-6.selectpicker(id='maxRows' data-style='btn-dark' data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100  
+                        span.txtth5 enties
+
+                .row(style='margin-bottom: 5px')
+                    .col-12   
+
+                        //- When Click รายการจอง 
+                        if bookingall
+                            table.table.table-bordered.table-hover(id='mytable', style="width:100%")
+                                thead
+                                    tr.table-active.txttb5
+                                        //- th ลำดับรายการ
+                                        th ผู้ทำรายการ
+                                        th ประเภทห้อง 
+                                        th ค่าบริการ
+                                        th สถานะ
+                                    
+                                each allbookxlist in bookingall 
+                                    tr.txttb5
+                                        //- td= allbookxlist.No
+                                        td 
+                                            p.p_m-b-2= '\nชื่อผู้จอง : ' + allbookxlist.book_name 
+                                            p.p_m-b-2= '\nเบอร์โทร : ' + allbookxlist.book_phone 
+                                            p.p_m-b-2= '\ne-mail : ' + allbookxlist.book_email
+                                        td
+                                            p.p_m-b-2= 'รูปแบบห้อง : ' + allbookxlist.book_roomtype 
+                                            p.p_m-b-2= 'ประเภทห้อง : ' + allbookxlist.book_roomname
+                                        td
+                                            p.p_m-b-2= 'ราคาปกติ' + ' : ' + allbookxlist.price
+                                            p.p_m-b-2= 'ราคาราชการ' + ' : ' + allbookxlist.price_discount
+                                        td 
+                                            
+                                            //- a.text-decor-none(href="/backendx/booking/allbook/checkin/" + allbookxlist._id)
+                                            - if (allbookxlist.book_req_status == 'check-out')
+                                                button.btn.btn-warning(style=" height: 50px;")= allbookxlist.book_req_status + '-Success'
+                                            - else if(allbookxlist.book_req_status == 'check-in')
+                                                button.btn.btn-success(style=" height: 50px;") STAY
+                                            - else if(allbookxlist.book_req_status == 'wait-check-in')
+                                                button.btn.btn-primary(style=" height: 50px;") check-in-now
+            
+
+                        //- When Click wait-check-in      
+                        if bookstat
+                            table.table.table-bordered.table-hover(id='mytable')
+                                if bookstatus === 'wait-check-in'
+                                    thead
+                                        tr.table-active
+                                            th ผู้ทำรายการ
+                                            th ประเภทห้อง 
+                                            th in - out - create
+                                            th ค่าบริการ
+                                            th สถานะ
+                                            th ลบ
+                                    each bookings in bookstat    
+                                        tr.txttb5
+
+                                            td 
+                                                p.p_m-b-2= '\nชื่อผู้จอง : ' + bookings.book_name 
+                                                p.p_m-b-2= '\nเบอร์โทร : ' + bookings.book_phone 
+                                                p.p_m-b-2= '\ne-mail : ' + bookings.book_email
+                                            td
+                                                p.p_m-b-2= bookings.book_roomtype 
+                                                p.p_m-b-2= bookings.book_roomname
+                                            td
+                                                p.p_m-b-2= 'check-in : ' + bookings.book_chkin.getDate() + '/' + bookings.book_chkin.getMonth() + '/' + bookings.book_chkin.getFullYear()
+                                                p.p_m-b-2= 'check-out : ' + bookings.book_chkout.getDate() + '/' + bookings.book_chkout.getMonth() + '/' + bookings.book_chkout.getFullYear()
+                                                p.p_m-b-2= 'วันทำรายการ : ' + bookings.book_createDate.getDate() + '/' + bookings.book_createDate.getMonth() + '/' + bookings.book_createDate.getFullYear()
+                                            td
+                                                p.p_m-b-2= 'ราคาปกติ' + ' : ' + bookings.price
+                                                p.p_m-b-2= 'ราคาราชการ' + ' : ' + bookings.price_discount
+                                            td 
+                                                a.text-decor-none(href="/backendx/booking/allbook/checkin/" + bookings._id)
+                                                    button.btn.btn-primary(style=" height: 50px;")= bookings.book_req_status
+                                            td 
+                                                a.text-decor-none(class="btn-show-sidebar", id=(bookings._id))
+                                                    button.btn.btn-danger(style="width: 65px; height: 50px;")  ลบ                                      
+                                
+                                //- When Click check-in
+                                if bookstatus === 'check-in'
+                                    thead.table-hover.table-bordered
+                                        tr.table-active
+                                            th ผู้ทำรายการ
+                                            th ประเภทห้อง
+                                            th in - out
+                                            th ค่าบริการทั้งหมด
+                                            th สถานะ
+                                            th ใบเสร็จ                        
+                                    each bookings in bookstat                         
+                                        tr.txttb5
+                                            td 
+                                                p.p_m-b-2= '\nชื่อผู้จอง : ' + bookings.book_name 
+                                                p.p_m-b-2= '\nเบอร์โทร : ' + bookings.book_phone 
+                                                p.p_m-b-2= '\ne-mail : ' + bookings.book_email
+                                            td
+                                                if bookings.book_roomtype === 'Rooms'
+                                                    p.p_m-b-2= bookings.book_roomtype 
+                                                    p.p_m-b-2= bookings.book_roomname + ' - ' + bookings.book_roomNo
+                                                else
+                                                    p.p_m-b-2= bookings.book_roomtype
+                                                    p.p_m-b-2= bookings.book_roomname
+                                            td
+                                                if bookings.book_roomtype === 'Rooms'
+                                                    //- p.p_m-b-2= 'ราคา  ' + bookings.book_newPrice
+                                                    p.p_m-b-2= 'Check-in ' + ' : ' + bookings.book_chkin.getDate() + '/' + (bookings.book_chkin.getMonth() + 1) + '/' + bookings.book_chkin.getFullYear()
+                                                    p.p_m-b-2= 'Check-out ' + ' : ' + bookings.book_chkout.getDate() + '/' + (bookings.book_chkout.getMonth() + 1) + '/' + bookings.book_chkout.getFullYear()
+                                                    p.p_m-b-2= 'รวมทั้งสิ้น : ' + bookings.totaltimex + " วัน"  
+                                                else
+                                                    p.p_m-b-2= 'Check-in ' + ' : ' + bookings.book_chkin.getDate() + '/' + (bookings.book_chkin.getMonth() + 1) + '/' + bookings.book_chkin.getFullYear()
+                                                    p.p_m-b-2= 'Time 1 : ' + bookings.book_timer_T1
+                                                    p.p_m-b-2= 'Time 2 : ' + bookings.book_timer_T2
+                                                    p.p_m-b-2= 'Time 3 : ' + bookings.book_timer_T3
+                                                    p.p_m-b-2= 'จำนวนช่วง : ' + bookings.logchk
+                                            td
+                                                p.p_m-b-2= 'ราคา ' + ' : ' + bookings.totalprice
+                                            td
+                                                span.flex-c-m(style='margin-top : 10px')
+                                                    button.btn.btn-success() STAY
+                                                span.flex-c-m(style='margin-top : 10px')
+                                                    a.btn-show-sidebar
+                                                        button.btn.btn-warning() Check-Out-here
+                                            td
+                                                span.flex-c-m(style='margin-top : 10px')
+                                                    a(href='')
+                                                        button.btn.btn-info() 
+                                                            p.p_m-b-2 พิมพ์
+                                                            p.p_m-b-2 ใบเสร็จ
+
+
+
+                                    each bookings in bookstat 
+                                        aside.sidebar.trans-2
+                                            .container(style="margin-top: 5%;")
+                                                .row.flex-c-m(style="text-align: center")
+                                                    .col-12 
+                                                        .txtth3 คุณต้องการที่เช็คเอ้า ?
+                                                        if bookings.book_roomtype === 'Rooms'
+                                                            .txtth3= "คุณ " + bookings.book_name 
+                                                            .txtth3= "ประเภทห้อง " + bookings.book_roomtype + " ห้อง " + bookings.book_roomname + ' ' + bookings.book_roomNo                                                          
+                                                        else 
+                                                            .txtth3= "คุณ " + bookings.book_name 
+                                                            .txtth3= "ประเภทห้อง " + bookings.book_roomtype + " ห้อง " + bookings.book_roomname
+
+                                                .row.flex-c-m(style="margin-top : 10px")
+                                                    .col-3
+                                                        form(action='/backendx/booking/allbook/check-out/' + bookings._id, method='post')
+                                                            button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit') Yes
+                                                    .col-3
+                                                        
+                                                        a.text-decor-none.trans-2.btn-hide-sidebar
+                                                            button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No                                                                   
+
+                                
+                                    
+                                //- When Click check-out
+                                if bookstatus === 'check-out'
+                                    thead
+                                        tr.table-active
+                                            th ผู้ทำรายการ
+                                            th ประเภทห้อง
+                                            th in - out
+                                            th ค่าบริการ
+                                            th สถานะ
+                                            th ใบเสร็จ                        
+                                    each bookings in bookstat                         
+                                        tr.txttb5
+                                            td 
+                                                p.p_m-b-2= '\nชื่อผู้จอง : ' + bookings.book_name 
+                                                p.p_m-b-2= '\nเบอร์โทร : ' + bookings.book_phone 
+                                                p.p_m-b-2= '\ne-mail : ' + bookings.book_email
+                                            td
+                                                p.p_m-b-2= bookings.book_roomtype 
+                                                p.p_m-b-2= bookings.book_roomname + ' - ' +bookings.book_roomNo
+                                            - if(bookings.book_roomtype === 'Rooms')                                            
+                                                td
+                                                    p.p_m-b-2= 'ราคา  ' + bookings.newPrice
+
+                                                    p.p_m-b-2= 'Check-in ' + ' : ' + bookings.book_chkin.getDate() + '/' + (bookings.book_chkin.getMonth() + 1) + '/' + bookings.book_chkin.getFullYear()
+                                                    p.p_m-b-2= 'Check-out ' + ' : ' + bookings.book_chkout.getDate() + '/' + (bookings.book_chkout.getMonth() + 1) + '/' + bookings.book_chkout.getFullYear()
+                                                    p.p_m-b-2= 'รวมทั้งสิ้น : ' + bookings.totaltimex + " วัน"   
+                                            - else 
+                                                td
+                                                    p.p_m-b-2= 'Check-in ' + ' : ' + bookings.book_chkin.getDate() + '/' + (bookings.book_chkin.getMonth() + 1) + '/' + bookings.book_chkin.getFullYear()
+                                                    p.p_m-b-2= 'ช่วง 08.00น. - 12.00น. : ' + bookings.book_timer_T1
+                                                    p.p_m-b-2= 'ช่วง 13.00น. - 16.00น. : ' + bookings.book_timer_T2
+                                                    p.p_m-b-2= 'ช่วง 17.00น. - 21.00น. : ' + bookings.book_timer_T3
+                                                    p.p_m-b-2= 'จำนวนช่วงเวลา ' + bookings.logchk
+                                            td
+                                                p.p_m-b-2= 'ราคา ' + ' : ' + bookings.totalprice
+                                            td
+                                                span.flex-c-m(style='margin-top : 10px')
+                                                
+                                                    button.btn.btn-warning.btn-block(style='height:66px') Check-Out-Success
+                    
+                                            td
+                                                span.flex-c-m(style='margin-top : 10px')
+                                                    a.text-decor-none(href='')
+                                                        button.btn.btn-info.btn-block() 
+                                                            p.p_m-b-2 พิมพ์
+                                                            p.p_m-b-2 ใบเสร็จ
+                                                            
+                                                            
+                                                            
+                                                            
+                                                            
+                            each bookings in bookstat 
+                                aside.sidebar.trans-2
+                                    .container(style="margin-top: 5%;")
+                                        .row.flex-c-m(style="text-align: center")
+                                            .col-12 
+                                                .txtth3 คุณต้องการที่จะลบ ?
+                                                .txtth3= "ข้อมูลของคุณ " + bookings.book_name + " หรือไม่"
+                                        .row.flex-c-m(style="margin-top : 10px")
+                                            .col-3
+                                                form(action='/backendx/booking/allbook/del/' + bookings._id, method='post')
+                                                    button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit') Yes
+                                            .col-3
+                                                
+                                                a.text-decor-none.trans-2.btn-hide-sidebar
+                                                    button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No
+                .row(style='margin-bottom: 17px;')
+                            div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                                span.m-r-6 Showing
+                                span.m-r-6(id='firstNumShow')                      
+                                span.m-r-6 to                      
+                                span.m-r-6(id='lastNumShow')
+                                span.m-r-6 of                      
+                                span.m-r-6(id='totalShow')
+                                span.m-r-6 enties      
+                            div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                                nav
+                                    ul.pagination
+                                                                                                    
+                                                        
+    if cin
+        .container-fluid
+            .row
+                .col
+                    h2 รายการจอง
+            .con-block
+                .container
+                        .row
+                            .col-12
+                                h2.txtth2 ข้อมูลผู้จอง
+                form(action='/backendx/booking/allbook/checkin/' + cin._id  , method='post')
+                    .container
+                        .row
+                            .col-6
+                                .row
+                                    .form-group.col-12
+                                        label ชื่อ
+                                        input.form-control.border-r-10(type='text', value=(cin.book_name), readonly)
+                                    .form-group.col-12
+                                        label เบอร์ติดต่อ
+                                        input.form-control.border-r-10(type='text', value=(cin.book_phone), readonly)
+                                    .form-group.col-12
+                                        label e-mail 
+                                        input.form-control.border-r-10(type='text', value=(cin.book_email), readonly)
+                                    .form-group.col-12
+                                        label ความต้องการพิเศษ
+                                        textarea.form-control.border-r-10(type='text', value=(cin.book_spacial), placeholder=(cin.book_spacial), readonly)
+                            .col-6
+                                .row
+                                    .col-12
+                                        h5.txtth5= 'ประเภทห้อง : ' + cin.book_roomtype 
+                                        h5.txtth5= 'ห้อง : ' + cin.book_roomname     
+                                if cin.book_roomtype == 'Rooms'
+                                    .row
+                                        .col-6
+                                            h5.txtth5 เลือกห้อง
+   
+                                    .row
+                                        .form-group.col-6
+                                            select.form-control(name='book_roomNo', id='No',  required,  style="cursor: pointer")
+                                                option(value="", selected)
+                                                each roomtypexx in roomtypex
+                                                    option(value=(roomtypexx.No))= roomtypexx.room_category + ' ' + roomtypexx.room_type + ' ' + roomtypexx.No
+                          
+                                    
+                                .row
+                                    .form-check.col-12
+                                        p ราคา 
+                                        input.form-check-input.m-l-none(class=(cin.book_roomtype === "Rooms" ? 'chk' : 'chkx'), style='margin-right: 5px', type='radio', name='newprice', value=(cin.price), required) 
+                                        h5.txtth5(for=(cin.price), style="margin-left: 17px;")= 'เรททั่วไป ' + cin.price + ' / ' + 'วัน'
+                                    .form-check.col-12
+                                        input.form-check-input.m-l-none(class=(cin.book_roomtype === "Rooms" ? 'chk' : 'chkx'), type='radio', name='newprice', value=(cin.price_discount), required) 
+                                        h5.txtth5(for=(cin.price_discount), style="margin-left: 17px;")= 'เรทราชการ ' + cin.price_discount + ' / ' + 'วัน'
+                                
+                                if cin.book_roomtype === "Rooms"
+                                    .row(style='margin-top: 10px')
+                                        .form-group.col-6
+                                            label Check In
+                                            input.form-control.ui-buttonx(id='datestart', type='text', value=(cin.book_chkin), readonly)
+                                        .form-group.col-6
+                                            label Check Out
+                                            input.form-control.ui-buttonx(id='dateend', type='text', value=(cin.book_chkout), readonly)
+                                        .form-group.col-12
+                                            h5.txtth5 จำนวนวันทั้งหมด
+                                            input.form-control(id='totaltimex', name='totaltimex', readonly, style="cursor: pointer")
+                             
+                                    .row(style='margin-top: 10px')
+                                        .form-group.col-12
+                                            h5.txtth5 ราคาทั้งหมด
+                                            input.form-control.border-r-10(id='totalprice', name='totalprice', type='text', value='', readonly,  style="cursor: pointer")
+                                            input(type='hidden', name='book_req_status', value='check-in')
+
+                                
+                                else
+                                    .row(style='margin-top: 10px')
+                                        .form-group.col-6
+                                            label Check In
+                                            input.form-control.ui-buttonx(id='datestart', type='text', value=(cin.book_chkin), readonly)
+                                        .form-group.col-6
+                                            label เวลา
+                                            input.form-control(type='text', name='book_timer', readonly, value=(cin.book_timer))
+                                    .row(style='margin-top: 10px')
+                                        .form-group.col-12
+                                            label Time Select
+                                    .row#secprice.invisible(style='margin-top: 10px')
+                                        .form-group.col-6
+                                            input#timesec(type='hidden', value=(cin.book_timer))
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb1', type='checkbox', name='book_timer_T1', value='1')
+                                                label.form-check-label#tboncb1(for="cb1") T1 : 08.30 - 12.00 น.
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb2', type='checkbox', name='book_timer_T2', value='1')
+                                                label.form-check-label#tboncb2(for="cb2") T2 : 13.00 - 17.00 น.
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb3', type='checkbox', name='book_timer_T3', value='1')
+                                                label.form-check-label#tboncb3(for="cb3") T3 : 18.00 - 22.00 น.
+                                        .form-group.col-6
+                                            h5.txtth5= `จำนวนช่วง : `
+                                                span.txtth5#logchk(name='logchk')
+                                            h5.txtth5 ราคาทั้งหมด
+                                                input.form-control.border-r-10#totalprice(type='text', name='totalprice' value='', readonly)
+                                                input(type='hidden', name='book_req_status', value='check-in')
+
+
+
+                                .row(style='margin-top: 10px')
+                                    .form-group.col-6
+                                        button.btn.btn-success.btn-block(type='submit') บันทึก
+                                    .col-6
+                                        a.text-decor-none(href='/backendx/booking/allbook/' + cin.book_req_status)
+                                            span.btn.btn-warning.btn-block กลับ
+
+
+
+
+
+
+                                                                            
+
+                                    
+                                    //- .row(style='margin-top: 10px')
+                                    //-     .form-group.col-12
+                                    //-         label Check In
+                                    //-         input.form-control.border-r-10(type='text', name='book_chkin', value=(cin.book_chkin.getDate() + '/' + cin.book_chkin.getMonth() + '/' + cin.book_chkin.getFullYear()), readonly)
+                                    //-     .form-group.col-12
+                                    //-         p.p_m-b-2 Time Select
+                                    //-     .form-group.col-6
+                                    //-         input#timesec(type='hidden', value=(cin.book_timer))
+                                    //-         .form-check
+                                    //-             input.form-check-input.chk_t1(type='checkbox', name='book_timer', value='T1 : 08.30 - 12.00 น.')
+                                    //-             label.form-check-label(for="") T1 : 08.30 - 12.00 น.
+                                    //-         .form-check
+                                    //-             input.form-check-input.chk_t1(type='checkbox', name='book_timer', value='T2 : 13.00 - 17.00 น.')
+                                    //-             label.form-check-label(for="") T2 : 13.00 - 17.00 น.
+                                    //-         .form-check
+                                    //-             input.form-check-input.chk_t1(type='checkbox', name='book_timer', value='T3 : 13.00 - 17.00 น.')
+                                    //-             label.form-check-label(for="") T3 : 18.00 - 22.00 น.
+                                            
+                                    //-     .form-group.col-6
+                                    //-         h5.txtth5= `จำนวนช่วง : `
+                                    //-             span.txtth4#logchk()
+                                    //-         h5.txtth5 ราคาทั้งหมด
+                                    //-             input.form-control.border-r-10.logprice(type='text', value='', readonly)

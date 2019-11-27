@@ -1,0 +1,553 @@
+extends layoutuser
+
+block content
+
+
+    if roomCategory
+        .container-fluid
+            .row(style='margin-bottom: 5px')
+                .col
+                    h3 จัดการห้องพัก
+        
+
+        .con-block
+            .container-fluid
+                .row.m-b-13.m-t-15
+                    .col
+                        h4 จัดการประเภทห้องพัก
+                .row.m-b-13
+                    .col-5.form-group
+                        span.m-r-6.txtth5 Show
+                        select.m-r-6.selectpicker(id='maxRows' data-style='btn-dark', data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100  
+                        span.txtth5 enties
+                    .m-r-25(style='position:absolute;right:0px')
+                        a.text-decor-none(href='/backendx/manageroom/manage-rooms/addroomcates')
+                            button.btn.btn-primary เพิ่มประเภทห้อง
+                .row
+                    .col-12
+                        table.table.table-hover.table-bordered(id='mytable')
+                            thead
+                                tr.table-active
+                                    th ประเภทห้องพัก
+                                    th เวลาที่สร้าง
+                                
+                                    th แก้ไข
+                            tbody
+                                each roomcate in roomCategory
+                                    tr.txttb5
+                                        td= roomcate.room_category
+                                        td= roomcate.dateCreate
+                                        td.flex-c-m
+                                            a(id='edit', href='/backendx/manageroom/manage-rooms/edit/' + roomcate._id)
+                                                button.btn.btn-warning.border-r-10(style="width: 65px;height: 50px; margin-right: 10px") แก้ไข
+                                            span.btn-show-sidebar(id=(roomcate.room_category))
+                                                button.btn.btn-danger.border-r-10(style="width: 65px; height: 50px;") ลบ     
+
+                        each roomcate in roomCategory
+                            aside.sidebar.trans-2(id=(roomcate.room_category))
+                                .container(style="margin-top: 5%;")
+                                    .row.flex-c-m(style="text-align: center")
+                                        .col-12 
+                                            .txtth3 คุณต้องการที่จะลบ ?
+                                            .txtth3= "ประเภทห้องพัก " + roomcate.room_category
+                                    .row.flex-c-m(style="margin-top : 10px")
+                                        .col-3         
+                                            form( action="/backendx/manageroom/manage-rooms/del/" + roomcate._id, method='post' )                                       
+                                                button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit') Yes
+                                        .col-3
+                                            a.text-decor-none.trans-2.btn-hide-sidebar
+                                                button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No
+                .row.m-b-17
+                    div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                        span.m-r-6 Showing
+                        span.m-r-6(id='firstNumShow')                      
+                        span.m-r-6 to                      
+                        span.m-r-6(id='lastNumShow')
+                        span.m-r-6 of                      
+                        span.m-r-6(id='totalShow')
+                        span.m-r-6 enties      
+                    div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                        nav
+                            ul.pagination
+
+                
+    if addroomcates
+        .container-fluid
+            .row(style='margin-bottom: 5px')
+                .col
+                    h3 จัดการห้องพัก
+        
+
+        .con-block
+            .container-fluid
+                .row.m-b-13.m-t-15
+                    .col
+                        h4 เพิ่มประเภทห้องพัก
+                .row
+                    .col-12
+                        form#addroomcate(action='/backendx/manageroom/manage-rooms/addroomcates/add', method="post")
+                            .form-group.col-4
+                                label กรุณาใส่ชื่อประเภท
+                                input.acate.form-control.border-r-10(type="text", placeholder='ชื่อประเภท', name='room_category', value='', required)
+                            //- .form-group.col-4
+                            //-     label รูปแบบห้อง - 1
+                            //-     input.form-control.border-r-10(type="text", placeholder='รูปแบบห้อง1', name='room_type1', value='')
+                            //- .form-group.col-4
+                            //-     label รูปแบบห้อง - 2
+                            //-     input.form-control.border-r-10(type="text", placeholder='รูปแบบห้อง2', name='room_type2', value='')                            
+                            //- .form-group.col-4
+                            //-     label รูปแบบห้อง - 3
+                            //-     input.form-control.border-r-10(type="text", placeholder='รูปแบบห้อง3', name='room_type3', value='')                            
+                            .form-group.col-4
+                                .flex-c-m(style="float: right")
+                                    button.btn-arcate.btn.btn-success.border-r-10(type='submit', style="width: 80px; height: 50px") เพิ่ม  
+                .row
+                    .col-12
+                        each roomcates in roomcate
+                            input.roomcates(type='text', value=(roomcates.room_category), hidden)
+                                    
+    if editCateRoom
+        .container-fluid
+            .row(style='margin-bottom: 5px')
+                .col
+                    h3 แก้ไขประเภทห้องพัก
+        .con-block
+            .container-fluid
+                .row
+                    p= '_ID' + ' : ' + editCateRoom._id
+                .row
+                    p= 'ประเภท' + ' : ' + editCateRoom.room_category
+                
+                form#editcate(action='/backendx/manageroom/manage-rooms/edit/' + editCateRoom._id , method='post')
+                    .row
+                        .form-group.col-6
+                            label กรุณาใส่ชื่อประเภทใหม่
+                            input.editcatedata.form-control.border-r-10(type="text", placeholder='ชื่อประเภท', name='room_category', value='', required)
+                    
+                    .row
+                        .form-group.col-3
+                            button.btn.btn-primary.btn-block(type='submit') บันทึก
+                        .col-3
+                            a.text-decor-none(href="/backendx/manageroom/manage-rooms")
+                                button.btn.btn-primary.btn-block(type='button') กลับ
+                .row
+                    .col-12
+                        each editcatexx in editcate
+                            input.allcateedit(type='text', value=(editcatexx.room_category), hidden)
+
+    //- Public Utility
+    if utility
+        .container-fluid
+            .row
+                .col
+                    h3.txtth3(style='margin: 10px') จัดการสาธารณูปโภค
+        
+        .con-block
+            .container-fluid
+                .row.m-b-13.m-t-15
+                    .col-6
+                        h4.txtth4 เลือกประเภทห้องพัก
+                    .col-3
+                        a(href='/backendx/manageroom/manage-public-utility/add-edit')
+                            button.btn.btn-block.btn-success(style='position: absolute; right: 0px') เพิ่มรายการสาธาราณูปโภค
+                    .col-3
+                        a.text-decor-none(href='/backendx/manageroom/manage-public-utility')
+                            button.btn.btn-block.btn-light(style='border: 1px solid gray') Refresh Data
+                .row.m-b-13
+                    .col-6.form-group
+                        select.form-control.custom-select(id='selectCate', data-select='(this.value)')
+                            option(value='shall', selected) Show All
+                            each util in utility
+                                option(value=(util.room_category))= util.room_category
+
+                        //- MIXIn
+                        //- mixin list(id, value, ...items)
+                        //-     ul(id=id, value=value)
+                        //-         each item in items
+                        //-             li= item
+                        //- +list('my-list', 'ss', ...utilsx)
+                        //- each ucate in utilsx
+                        //-     input.form-control(id='rex', value=(ucate.utilCate), type='hidden')
+                .row.m-b-13
+                    .col-6.form-group
+                        span.m-r-6.txtth5 Show
+                        select.selectpicker.m-r-6(id='maxRows' data-style='btn-dark' data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100
+                        span.txtth5 enties  
+                        
+                            
+                .row.m-b-13
+                    .col-6
+                        table.table.table-bordered.table-hover(id='mytable')
+                            thead
+                                tr.table-active
+          
+                                    th รายการเครื่องใช้
+                                    th จัดการ
+                                tbody.utill
+                                    each util in utilsx
+                                        tr(class=(util.utilCate))
+           
+                                            td.catextd= util.utilName
+                                            td
+                                                a(href='/backendx/manageroom/manage-public-utility/'+ util._id +'add-edit' )
+                                                    button.btn.btn-warning(style='margin: 3px') แก้ไข    
+                                                span.btn-show-sidebar(id=util._id)
+                                                    button.btn.btn-danger(style='margin: 3px') ลบ
+          
+                                //- form(action='', method='')
+                                //-     .row
+                                //-         .col-6.form-group
+                                //-             label ชื่อเครื่องใช้
+                                //-             input.form-control(name='utilName')
+                                //-         .col-6
+                                //-             label ประเภทห้อง
+                                //-             select.custom-select(name='utilCate', required)
+                                //-                 option(value='', disabled, selected, hidden, style='color: gray') Choose...
+                                //-                 each util in utility
+                                //-                     option(value=(util.room_category))= util.room_category
+                       
+                                        //- a(href='/backendx/manageroom/manage-public-utility/add-edit')
+                                        //-     button.btn.btn-info(style='position: absolute; right: 0px') เพิ่ม
+
+
+                .row.m-b-17
+                    div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                        span.m-r-6 Showing
+                        span.m-r-6(id='firstNumShow')                      
+                        span.m-r-6 to                      
+                        span.m-r-6(id='lastNumShow')
+                        span.m-r-6 of                      
+                        span.m-r-6(id='totalShow')
+                        span.m-r-6 enties      
+                    div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                        nav
+                            ul.pagination
+                    
+
+            each util in utilsx
+                aside.sidebar.trans-2(id=(util._id))
+                    .container(style="margin-top: 5%;")
+                        .row.flex-c-m(style="text-align: center")
+                            .col-12 
+                                .txtth3 คุณต้องการที่จะลบ ?
+                                .txtth3= "ประเภทเครื่องใช้ " + util.utilName
+                        .row.flex-c-m(style="margin-top : 10px")
+                            .col-3         
+                                form( action="/backendx/manageroom/manage-public-utility/del/" + util._id, method='post'  )                                       
+                                    button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit') ใช่
+                            .col-3
+                                a.text-decor-none.trans-2.btn-hide-sidebar
+                                    button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") ไม่ใช่
+    //- Add & Edit utility
+    if addAndEdit
+        .container-fluid
+            .row
+                .col
+                    h3.txtth3(style='margin: 10px') จัดการสาธารณูปโภค
+        
+        .con-block
+            .container-fluid
+                .row
+                    .col-12
+                        h3.txtth3=(editPub == null ? 'เพิ่มรายการสาธาราณูปโภค': 'แก้ไขรายการสาธาราณูปโภค')
+                form.fPubUtil(action=(editPub == null ? '/backendx/manageroom/manage-public-utility/add' : '/backendx/manageroom/manage-public-utility/edit/' + editPub._id), method='post')
+                    .row
+                        .form-group.col-6
+                            label ประเภทห้อง
+                            - if(editPub == null)
+                                select.form-control()
+                                    each rCateU in rCateUtil
+                                        option(value=(rCateU.room_category))= rCateU.room_category
+                            - else
+                                input.form-control(type='text', value=(editPub.utilCate), readonly)
+                    .row
+                        .form-group.col-6
+                            label ชื่อสาธารณูปโภค
+                            input.nameUtil.form-control(type='text', name='utilName', value=(editPub == null ? "": editPub.utilName), required)
+                    .row
+                        .form-group.col-6
+                            label รายละเอียด
+                            input.form-control(type='text', name='utilDes', value=(editPub == null ? '': editPub.utilDes), required)
+                    .row
+                        .form-group.col-3
+                            label ไอคอน
+                            input.iconUtil.form-control(type='text', name='utilSVG', value=(editPub == null ? '': editPub.utilSVG), reqired)
+                        .form-group.col-3
+                            label จำนวน / ห้อง
+                            input.form-control(type='number', name='quantity' , value=(editPub == null ? '': editPub.quantity))
+                    
+                    
+                    .row
+                        .form-group.col-2(style='display:flex;justify-content:center')
+                            i#showx(class=(editPub == null ? '' :editPub.utilSVG))
+                            span.hideText=(editPub == null ? '': editPub.utilName)
+                        .form-group.col-2
+                            button.btn.btn-block(class=(editPub == null ? 'btn-success' : 'btn-warning'), type='submit')=(editPub == null ? 'เพิ่ม' : 'แก้ไข')
+                        .form-group.col-2
+                            a.btn.btn-info.btn-block(href='/backendx/manageroom/manage-public-utility') กลับ
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //- Manage Room Page
+    if manageroomsx
+        .container-fluid
+            .row
+                .col-12
+                    h3 จัดการห้องพัก
+        .con-block
+            .container-fluid
+                .row
+                    .col-12
+                        h4.txtth3 เลือกประเภทห้องพัก
+                .row
+                    each roomCate in manageroomsx
+                        .col-3
+                            a.text-decor-none(href='/backendx/manageroom/manageroomsx/' + roomCate.room_category)
+                                button.btn.btn-primary.btn-block(type='submit', value=(roomCate.room_category))= roomCate.room_category
+    if allroomcate 
+        .container-fluid
+            .row
+                .col-12
+                    h3 จัดการห้องพัก   
+        .con-block
+            .container-fluid
+                .row.m-b-13
+                    .col-6.p-a-8
+                        h3.txtth3= 'ประเภท : ' + rcatesearch.room_category
+                    .col-6
+                        .flex-c-m(style='float: right')
+                            a.text-decor-none(href='/backendx/manageroom/manageroomsx', style="float: right")
+                                button.btn.btn-primary.border-r-10(style="width: 205px; height: 40px;") กลับ
+                        .flex-c-m(style='float: right; margin-right: 15px')
+                            a.text-decor-none(href='/backendx/manageroom/manageroomsx/' + roomcateax + '/add', style="float: right")
+                                button.btn.btn-success.border-r-10(style="width: 205px; height: 40px;") เพิ่มห้องพัก
+                
+                .row.m-b-13
+                    .col-12.form-group
+                        span.m-r-6.txtth5 Show
+                        select.m-r-6.selectpicker(id='maxRows' data-style='btn-dark' data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100  
+                        span.txtth5 enties
+
+                .row.m-b-13
+                    table.table.table-hover.table-bordered(id='mytable')
+                        thead
+                            tr.table-active
+            
+                                th ประเภทห้องพัก
+                                th ชื่อ - รูปแบบ
+                                th รายละเอียด
+                                th ขนาดของห้อง
+                                th เรทปกติ
+                                th เรทราชการ   
+                                th แก้ไข
+                        tbody
+                            each allroomcatex in allroomcate
+                                tr 
+                  
+                                    td= allroomcatex.room_category
+                                    td= allroomcatex.room_type
+                                    td= allroomcatex.room_description
+                                    td= allroomcatex.size_des.minSize + '-' + allroomcatex.size_des.maxSize + ' คน'
+                                    td= allroomcatex.price
+                                    td= allroomcatex.price_discount
+                                    td    
+                                        a.text-decor-none(href='/backendx/manageroom/manageroomsx/'+ allroomcatex.room_category + '/edit/' + allroomcatex._id)
+                                            button.btn.btn-warning แก้ไข
+                                        a.text-decor-none(class="btn-show-sidebar", id=(allroomcatex.room_category))
+                                            button.btn.btn-danger(style='margin-left: 5px')  ลบ                                      
+                
+                .row.m-b-17
+                    div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                        span.m-r-6 Showing
+                        span.m-r-6(id='firstNumShow')                      
+                        span.m-r-6 to                      
+                        span.m-r-6(id='lastNumShow')
+                        span.m-r-6 of                      
+                        span.m-r-6(id='totalShow')
+                        span.m-r-6 enties      
+                    div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                        nav
+                            ul.pagination
+
+                            
+            each allroomcatex in allroomcate
+                aside.sidebar.trans-2
+                    .container(style="margin-top: 5%;")
+                        .row.flex-c-m(style="text-align: center")
+                            .col-12 
+                                .txtth3 คุณต้องการที่จะลบ ?
+                                .txtth3= "ประเภทห้องพัก " + allroomcatex.room_category + " " + allroomcatex.room_type +  " " + allroomcatex.No
+                        .row.flex-c-m(style="margin-top : 10px")
+                            .col-3
+                                form(action='/backendx/manageroom/manageroomsx/' + allroomcatex.room_category + '/del/' + allroomcatex._id, method='post')
+                                    button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit', onclick='alert("ลบห้องพักสำเร็จ")') Yes
+                            .col-3
+                                a.text-decor-nonetrans-2.btn-hide-sidebar
+                                    button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No
+
+
+    if editOneRoom
+        .con-block
+            .container-fluid
+                .row(style='margin-bottom: 5px')
+                    .col
+                        h3 แก้ไขประเภทห้องพัก
+            .container-fluid
+                .row
+                    .col-6
+                        form(action='/backendx/manageroom/manageroomsx/'+ editOneRoom.room_category + '/edit/' + editOneRoom._id , method='post')
+                            .row
+                                .form-group.col-12
+                                    p= '_ID' + ' : ' + editOneRoom._id
+                            .row
+                                .form-group.col-12
+                                    label ประเภท 
+                                    select.form-control.border-r-10(name='room_category', required, value=(editOneRoom.room_category)) 
+                                        each editRoomCate in editrCate
+                                            option(value=(editRoomCate.room_category))= editRoomCate.room_category
+                            .row
+                                .form-group.col-12
+                                    label รูปแบบ
+                                    select.form-control.border-r-10(name='room_type', required) 
+                                        each editRoomType in rType
+                                            option(value=(editRoomType.room_category))= editRoomType.room_category
+                            .row    
+                                .form-group.col-12
+                                    label รายละเอียดห้อง 
+                                    input.form-control.border-r-10(type='text', name='room_description', value=(editOneRoom.room_description), required)
+                            .row
+                                .form-group.col-5
+                                    label ขนาดความจุของห้อง
+                                    input.form-control.border-r-10(type='number', name='size_des.minSize', value=(editOneRoom.size_des.minSize), required) 
+                                .col-1.flex-c-m
+                                    span ถึง
+                                .form-group.col-6
+                                    label &ensp;
+                                    input.form-control.border-r-10(type='number', name='size_des.maxSize', value=(editOneRoom.size_des.maxSize), required)                    
+                            .row
+                                .form-group.col-6
+                                    label ราคาปกติ 
+                                    input.form-control.border-r-10(type='number', name='price' value=(editOneRoom.price), required)
+                                .form-group.col-6
+                                    label ราคาพิเศษ 
+                                    input.form-control.border-r-10(type='number', name='price_discount' value=(editOneRoom.price_discount), required)
+                            .row
+                                .form-group.col-6
+                                    button.btn.btn-primary.btn-block(type='submit', onclick='alert("แก้ไขข้อมูลสำเร็จ");') บันทึก
+                                .col-6
+                                    a.text-decor-none(href="/backendx/manageroom/manageroomsx/" + editOneRoom.room_category)
+                                        button.btn.btn-primary.btn-block(type='button') กลับ       
+                    
+                    .col-6
+                        h3.txtth3 ข้อมูลก่อนทำการเปลี่ยนแปลง
+                        p= '_ID' + ' : ' + editOneRoom._id
+                    
+                        ul(style="list-style:none")
+                            li='หมายเลขห้อง ' + ' : ' + editOneRoom.room_num
+                            li='ประเภทห้อง ' + ' : ' + editOneRoom.room_category
+                            li='รูปแบบ ' + ' : ' + editOneRoom.room_type
+                            li='รายละเอียดห้อง ' + ' : ' +  editOneRoom.room_description
+                            li='ความจุของห้อง ' + ' : ' +  editOneRoom.size_des.minSize + '-' + editOneRoom.size_des.maxSize + ' คน'
+                            li='ราคาปกติ ' + ' : ' + editOneRoom.price
+                            li='ราคาพิเศษ ' + ' : ' + editOneRoom.price_discount
+                            
+    if addroomx
+        .con-block
+            .container-fluid
+                .row
+                    .col-6
+                        h2.txtth2 เพิ่มห้องพัก
+                        form#addroomx(action='/backendx/manageroom/manageroomsx/' + addroomx.room_category + '/addsuc', method='post')
+                            .row
+                                .form-group.col-12
+                                    label ประเภท 
+                                    input.form-control.border-r-10(type='text', name='room_category', value=(addroomx.room_category), readonly) 
+                            .row
+                                .form-group.col-12
+                                    label ชื่อ - รูปแบบ
+                                    input.form-control(name='room_type', value='', onkeyup='console.log(this.value)', require)
+                                    
+                            .row
+                                .form-group.col-12
+                                    label รายละเอียดห้อง 
+                                    textarea.form-control.border-r-10(type='text', name='room_description' required)
+                            .row
+                                .form-group.col-5
+                                    label ขนาดความจุของห้อง
+                                    input.size1.form-control.border-r-10(type='number', name='size_des.minSize', required) 
+                                .col-1.flex-c-m
+                                    span ถึง
+                                .form-group.col-6
+                                    label &ensp;
+                                    input.size2.form-control.border-r-10(type='number', name='size_des.maxSize', required) 
+                                    
+                            .row
+                                .form-group.col-6
+                                    label ราคาปกติ 
+                                    input.priceAdd1.form-control.border-r-10(type='number', name='price' required)
+                                .form-group.col-6
+                                    label ราคาพิเศษ 
+                                    input.priceAdd2.form-control.border-r-10(type='number', name='price_discount' required)
+                            .row
+                                .form-group.col-6
+                                    button.btadd.btn.btn-primary.btn-block(type='submit') บันทึก
+                                .col-6
+                                    a.text-decor-none(href="/backendx/manageroom/manageroomsx/" + addroomx.room_category)
+                                        button.btn.btn-primary.btn-block(type='button') กลับ      
+                    //- .col-6
+                    //-     each checkRoomName in checkroom
+                    //-         input(type='text', value=(checkRoomName.room_type))
+
+    

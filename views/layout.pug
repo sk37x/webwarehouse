@@ -1,0 +1,105 @@
+doctype html
+html(lang='th')
+  head
+    title= title
+    meta(charset="UTF-8")
+    // CSS
+
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+    link(rel="stylesheet", href="/stylesheets/carousel.css")
+    link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous")
+    link(rel="stylesheet", href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+    
+
+  body(id="top")
+    // HEADER
+    header
+      div(class="topnav")
+          div(class="container h-full" style="max-width: 1200px")
+              div(class="warp_header")
+                  div(class="logo")
+                      a(href="/", class="active")
+                          img(src="images/logo.png" style="width: 100px;")
+                  nav(class="warp-menu d-none d-xl-block")
+                      ul(class="main-menu")
+                          li 
+                            a(href="/about") ABOUT
+                          li 
+                            a(href="/reservation") RESERVATION
+                          li 
+                            a(href="/room") ROOM
+                          li
+                            a(href="/contact") CONTACT
+                      
+                  .social.trans-2
+                      a(href="#")
+                        i(class="fab fa-facebook-square")
+                      a(href="#")
+                        i(class="fab fa-twitter")
+                      a(href="#")
+                        i(class="fab fa-google-plus-g")
+                      a(class="btn-show-sidebar d-xl-none d-block")
+                        i(class="fas fa-align-justify")
+
+      aside.sidebar.trans-2
+        a.btn-hide-sidebar.trans-2
+          i.fas.fa-times.fa-2x
+        .warp-text-sidebar
+          ul
+            li HELLO
+            li HELLO
+            li HELLO
+            li HELLO
+            li HELLO
+
+    
+    
+    block content
+
+
+
+
+
+
+    footer.foot
+      .container.firstfoot
+        .row
+          .col-sm-6.col-md-4.p-t-50.p-b-50
+            h3.txtf1.m-b-30 contact us
+            ul.foot-ul
+              li.m-b-30
+                i.fas.fa-map-marker-alt(style="padding-right: 5px;")
+                span 39/1 ถนน รัชดาภิเษก, แขวง จันทรเกษม เขต จตุจักร, กรุงเทพมหานคร 10900, Thailand
+              li.m-b-30
+                i.fas.fa-phone(style="padding-right: 5px;")
+                span (+66) 8x-xxx-xxxx
+              li.m-b-30
+                i.fas.fa-envelope(style="padding-right: 5px")
+                span expE-mail : qqnumbty@jsk.com
+            h3.txtf1.m-b-30.p-t-30 opening times
+            ul.foot-ul
+              li 09:00 - 22:00
+              li every day
+          .col-sm-6.col-md-4.p-t-50.p-b-50
+            h3.txtf1.m-b-30 facebook updates
+          .col-sm-6.col-md-4.p-t-50.p-b-50
+            h3.txtf1.m-b-30 gallery
+      .endfoot
+        .container
+          .row
+            .col-sm-6.col-md-12(style="color: chartreuse")
+              p(style="margin-top: 1rem; margin-bottom: 1rem; float:right;") @design by : SK37.X      
+    
+    a#backtotop.btn-primary(href="#top")
+      span.fas.fa-angle-up
+    
+    
+    script(src="/javascripts/jquery-3.2.1.min.js")
+    script(src="/javascripts/jquery.main.js")
+    script(src="/javascripts/jquery.backtotop.js")
+    script(src="/javascripts/jquery.carousel.js")
+    script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+    
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
+    script(src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js')

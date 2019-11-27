@@ -1,0 +1,236 @@
+extends layoutuser
+
+block style
+    link(rel='stylesheet', href='/stylesheets/blockcalen.css')
+
+block content
+
+    .container-fluid
+        .row
+            .col
+                h3 รายงาน
+
+    if totalpricez 
+        .con-block
+            .container-fluid
+                .row.m-a-10
+                    .col
+                        h4.txtth4 ยอดเงินสุทธิ
+                .row
+                    .col
+                        h5.txtth5 ค้นหายอดเงิน
+                .form()
+                    .row
+                        .col-3
+                            label ค้นหาจากประเภทห้อง
+                            select.form-control(id='selectCateReps', type='text', onchange='console.log(this.value);', required)
+                                option(value='', hidden) เลือกประเภทห้อง...
+                                option(value='showall') แสดงทั้งหมด
+                                each reportCate in repCate
+                                    option(value=(reportCate.room_category))= reportCate.room_category
+                        .col-3
+                            label เลือกปี
+                            select.form-control(id='selectY', type='text', style='cursor: pointer', onchange='console.log(this.value);',  required)
+                                option(value='', hidden) เลือกปี...
+                        .col-3
+                            label เลือกเดือน
+                            select.form-control(id='selectM', type='text', style='cursor: pointer', onchange='console.log(this.value);',  required)
+                                option(value='',  hidden) เลือกเดือน...
+                .row(style='margin-top: 15px;')
+                    .col-12
+                        table.table.table-hover
+                            thead
+                                tr
+                                    th ข้อมูลผู้เช่า
+                                    th ห้องที่เช่า
+                                    th จำนวนผู้เข้าพัก
+                                    th รายละเอียดการเช่า
+                                    th ราคา
+                            tbody.reportPrice
+                                each totalitem, i in totalpricez
+                                    - var classx = [totalitem.book_chkin.getMonth(), totalitem.book_chkin.getFullYear(), totalitem.book_roomtype]
+                                    tr(class=(totalitem.book_roomtype))
+                                        td
+                                            p.p_m-b-2= 'ชื่อ-นามสกุล : ' + totalitem.book_name + '\n'
+                                            p.p_m-b-2= 'เบอร์โทรศัพท์ : ' + totalitem.book_phone + '\n' 
+                                            p.p_m-b-2= 'E-mail : ' + totalitem.book_email + '\n'
+                                        td
+                                            p.p_m-b-2= 'ประเภทห้อง : ' 
+                                                span.spnCategory= totalitem.book_roomtype
+                                            - if(totalitem.book_roomNo !== undifined)
+                                                p.p_m-b-2= 'ห้อง : ' + totalitem.book_roomtype + ' ' + totalitem.book_roomNo
+                                            - else
+                                                p.p_m-b-2= 'ห้อง : ' + totalitem.book_roomtype
+
+                                        td
+                                            p.p_m-b-2= 'จำนวน : ' + totalitem.book_person + ' คน'
+                                            - if(totalitem.book_adult === 1)
+                                                p.p_m-b-2= 'ผู้ใหญ่ : ' + totalitem.book_adult + ' คน'
+                                                p.p_m-b-2= 'เด็ก : ' + (totalitem.book_child = null ? totalitem.book_child : 0) + ' คน'
+                                        td 
+                                            p.p_m-b-2 Check In : 
+                                                span.spngetdatein= totalitem.book_chkin.getDate() 
+                                                span /
+                                                span.spngetmonthin= totalitem.book_chkin.getMonth() + 1
+                                                span /
+                                                span.spngetyearin= totalitem.book_chkin.getFullYear()
+                                            - if(totalitem.book_timer_T1 === false)
+                                                p.p_m-b-2 Check Out : 
+                                                    span.spngetdateout= totalitem.book_chkout.getDate() 
+                                                    span /
+                                                    span.spngetmonthout= totalitem.book_chkout.getMonth()
+                                                    span /
+                                                    span.spngetyearout= totalitem.book_chkout.getFullYear()
+                                            - else
+                                                p.p_m-b-2= 'เวลา 08.30 - 12.00น. : ' + totalitem.book_timer_T1
+                                                p.p_m-b-2= 'เวลา 13.00 - 17.00น. : ' + totalitem.book_timer_T2
+                                                p.p_m-b-2= 'เวลา 18.00 - 22.00น. : ' + totalitem.book_timer_T3
+                                            p.p_m-b-2 วันที่ทำรายการ : 
+                                                span.spngetdatecreate= totalitem.book_createDate.getDate() 
+                                                span /
+                                                span.spngetmonthcreate= totalitem.book_createDate.getMonth()
+                                                span /
+                                                span.spngetyearcreate= totalitem.book_createDate.getFullYear()
+                                            
+                                            td ราคารวม :  
+                                                span.totalpricez
+                                                span  บาท
+                                                input(type="hidden" class="totalprice" value=(totalitem.totalprice))
+                            tr.repsresult.table-success
+                                td
+                                td
+                                td
+                                td
+                                td(align="right") ราคารวมทั้งสิ้น
+                                td(align="right")
+                                    span.sumprice
+
+    //- Reservation Page
+    if reservation  
+        .con-block
+            .container-fluid
+                .row
+                    .col
+                        h1 Query By BOOKING DBS
+                .row.m-t-15
+                    .col-3(style='margin-bottom: 10px')
+                        a.text-decor-none(href='/backendx/report/reservation')    
+                            button.btn-block.btn.btn-primary Home Report 
+                    each rCate1 in roomCateReport 
+                        .col-3(style='margin-bottom: 10px')
+                            a.text-decor-none(href='/backendx/report/reservation/' + rCate1.room_category)
+                                button.btn.btn-info.btn-block= rCate1.room_category
+                 
+            .container-fluid
+                .row
+                    .col
+                        h2.flex-c-m(style='margin-top: 30px; margin-bottom: 30px') รายงานการจองห้องพักทั้งหมด
+                .row
+                    .col
+                        canvas(id='myChart1' width='400' height='150')
+                .row
+                    .col
+                        each reser, i in reservation
+                            input.form-control.dateCreatex(class=('dateCreate' + i),type='text', value=(reser.book_createDate), hidden)
+                            input.form-control.dateCreatex(class=('chkin ' + reser.book_chkin.getFullYear() +' ' + reser.book_roomtype),type='number', value=(reser.book_chkin.getMonth() + 1), hidden)
+                            input.form-control(class='bookingCate', type='text', value=(reser.book_roomtype), hidden)
+                            
+                        each rCate in roomCateReport
+                            input.form-control(class='room_category', type='text', value=(rCate.room_category), hidden)
+            
+            section.resultchart
+                .container-fluid
+                    .row
+                        .col
+                            h3 Result(จำนวนการจอง)
+                    .row
+                        .col
+                            div(style='width: 170px;margin-right: 0px; float: left')
+                                each rCate in roomCateReport
+                                    span(style='margin-left : 2em')= rCate.room_category + '\n'
+                            div(style='float: left')
+                                each rCate, i in roomCateReport
+                                    span(style='margin-left: 5px; margin-right: 13px') :
+                                    br
+                            div
+                                each rCate, i in roomCateReport
+                                    span(class=('rsRoom'))
+                                    span(style='margin-left: 15px') ครั้ง 
+                                    br
+
+
+    if roomDesRs
+        .con-block
+            .container-fluid
+                .row
+                    .col
+                        h1 Query By BOOKING DBS
+                .row.m-t-15
+                        .col-3(style='margin-bottom: 10px')
+                            a.text-decor-none(href='/backendx/report/reservation')    
+                                button.btn-block.btn.btn-primary Home Report 
+                        each rCate1 in roomCateReport 
+                            .col-3(style='margin-bottom: 10px')
+                                a.text-decor-none(href='/backendx/report/reservation/' + rCate1.room_category)
+                                    button.btn.btn-info.btn-block= rCate1.room_category
+            .container-fluid
+                .row
+                    .col
+                        h2.flex-c-m(style='margin-top: 30px; margin-bottom: 30px') รายงานการจองห้องพักทั้งหมด
+                .row
+                    .col
+                        canvas(id='myChartR', width='400', height='150')
+                .row
+                    .col
+                        each rDes in roomDesRs
+                            input(class='roomDescription', type='hidden', value=(rDes.room_name))
+                        each resBook in resBookR
+                            input.bookCount(y=(resBook.book_createDate.getFullYear()), type='hidden', value=(resBook.book_roomname))
+            
+            .container-fluid
+                .row
+                    .col
+                        h3.txtth3 Result(จำนวนการจอง)
+                .row
+                    .col
+                        div(style='width: 50px;margin-right:50px; float: left')
+                            each rDes in roomDesRs
+                                span(style='margin-left : 2em')= rDes.room_name + '\n'
+                        div(style='float: left')
+                            each rDes, i in roomDesRs
+                                span(style='margin-left: 5px; margin-right: 13px') :
+                                br
+                      
+                        div
+                            each rDes, i in roomDesRs
+                                span(class=('rsRoomOther'))
+                                span(style='margin-left: 15px') ครั้ง 
+                                br
+
+
+
+    //- BookFrom Page
+    if bFrom
+        .con-block
+            .container-fluid
+                .row
+                    .col
+                        h1 QTY BOOKING BY Client - Staff
+
+                .row.flex-c-m(style='margin-top: 30px; margin-bottom: 30px')
+                    h2 QTY BOOKING BY Client - Staff
+
+            .container-fluid
+                .row
+                    canvas(id='bfChart', width='400', height='150')
+                .row
+                    .col
+                        each bfFormat in bFrom
+                            input(class='bfFormat', type='hidden', value=(bfFormat.bookfrom_category))
+                .row
+                    .col
+                        each bfRes in bfResult
+                            input(class='bfResult', type='hidden', value=(bfRes.book_from))
+                            input(class='bfRoomCate', type='hidden', value=(bfRes.book_roomtype))
+                        each rCatex in rCate
+                            input(class='room_category', type='hidden', value=(rCatex.room_category))

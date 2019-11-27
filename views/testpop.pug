@@ -1,0 +1,55 @@
+doctype html
+html
+
+
+head
+    link(rel='stylesheet', href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
+    //- link(rel='stylesheet', type='text/css', href='/stylesheets/main.css')
+
+
+body
+    .container
+        .row
+            .col
+                h1 TEST PAGINATION
+        .row
+            .col
+                h4 SELECT ROWS
+                .form-group
+                    select.form-control(name='state', id='maxRows', style='width:150px')
+                        option(value='5000') Show All
+                        option(value='10') 10
+                        option(value='15') 15
+                        option(value='20') 20
+                        option(value='25') 25
+                        option(value='50') 50
+                        option(value='70') 70
+                        option(value='100') 100
+
+
+        .row
+            .col
+                table.table.table-hover(id='mytable')
+                    thead
+                        th name
+                        th email
+                        th phone
+                        th address
+                    tbody
+                        - for(i=0;i<100;i++)
+                            tr
+                                each x in ['thanapox', 'test@test.net', '082222222', 'Thailand']
+                                    td= x
+                            
+        .row
+            .col
+                nav
+                    ul.pagination
+
+   
+                
+
+    script(src='/javascripts/jquery-3.2.1.min.js')   
+    script(src='/javascripts/test.js')
+        
+//- script(src='javascripts/jquery-3.2.1.min.js')

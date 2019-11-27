@@ -1,0 +1,450 @@
+extends layoutuser
+
+
+block content
+    .container-fluid
+        .row
+            .col
+                h2 จัดการผู้ใช้
+    
+    if userlvl
+        .con-block
+            .container-fluid(style='margin-top:5px')
+                .row
+                    .col-12
+                        h4 จัดการระดับสมาชิก
+                .row(style='margin-top: 10px; margin-bottom: 15px')
+                    .col-2
+                        a.text-decor-none(href='/backendx/user/level/insert')
+                            button.btn.btn-block.btn-success เพิ่มข้อมูล
+                    .col-2
+                        a.text-decor-none(href='/backendx/user/level/refresh')
+                            button.btn.btn-block.btn-light(style='border: 1px solid gray') Refresh Data
+                .row.m-b-13
+                    .col-12.m-t-15.form-group
+                        span.m-r-6 Show
+                        select.m-r-6.selectpicker(id='maxRows' data-style='btn-dark' data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100  
+                        span enties
+            
+       
+
+                .row
+                    .col-6
+                        table.table.table-hover.table-bordered(id='mytable' style='margin-top:6px')
+                            thead
+                                tr.table-active
+                                    //- th id
+                                    th ระดับผู้ใช้
+                                    th ลบข้อมูล
+                                    
+                            tbody
+                                - var userNow
+                                each userlv, key in userlvl
+                                    tr
+                                        //- td= key + 1 
+                                        //- td(onclick=`
+                                        //- var sx = document.getElementById('userLevel').innerText;
+                                        //- console.log( x + ${userlv.userlevel});
+                                        //- `)
+                                        td
+                                            
+                                            a.userlv-pos(href='/backendx/user/level/edit/' + userlv.userlevel)= userlv.userlevel
+                                           
+                                        td
+                                            button.btn.btn-danger.btn-show-sidebar.delBlock(id=(userlv.userlevel)) ลบข้อมูล
+
+                .row.m-b-17
+                    div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                        span.m-r-6 Showing
+                        span.m-r-6(id='firstNumShow')                      
+                        span.m-r-6 to                      
+                        span.m-r-6(id='lastNumShow')
+                        span.m-r-6 of                      
+                        span.m-r-6(id='totalShow')
+                        span.m-r-6 enties      
+                    div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                        nav
+                            ul.pagination
+
+                        
+            each userlvDel in userlvl
+                aside.sidebar.trans-2
+                    .container(style="margin-top: 5%;")
+                        .row.flex-c-m(style="text-align: center")
+                            .col-12 
+                                .txtth3 คุณต้องการที่จะลบ ?
+                                .txtth3= "ระดับผู้ใช้ " + userlvDel.userlevel
+                        .row.flex-c-m(style="margin-top : 10px")
+                            .col-3
+                                form(action='/backendx/user/level/' + userlvDel.userlevel + '/del/' + userlvDel._id, method='post')
+                                    button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit', onclick='alert("ลบข้อมูลสำเร็จ")') Yes
+                            .col-3
+                                a.text-decor-nonetrans-2.btn-hide-sidebar
+                                    button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No
+
+
+
+    //- PAGE INSERT
+    if insert
+        .con-block
+            .container-fluid(style='margin-top:5px')
+                .row
+                    .col-12                 
+                        h4 เพิ่มระดับสมาชิก
+                form(action='/backendx/user/level/insert/add', method='post')
+                    .row
+                        .col-6.form-group
+                            input.form-control(type='text', name='userlevel', placeholder='เพิ่มระดับสมาชิก', required)
+                    .row
+                        .col-3.form-group
+                            button.btn.btn-block.btn-success(type='submit', onclick='alert("เพิ่มข้อมูลสำเร็จ")') เพิ่มข้อมูล
+                        .col-3.form-group
+                            a.text-decor-none(href='/backendx/user/level')
+                                button.btn.btn-block.btn-info(type='button') กลับ
+
+    //- USER EDIT LEVEL PAGE
+    if editlevel
+        .con-block
+            .container-fluid(style='margin-top: 5px')
+                .row
+                    .col-12
+                        h4 แก้ไขระดับสมาชิก
+
+            .container-fluid
+                form(action='/backendx/user/level/edit/' + editlevel.userlevel , method='post')
+                    .row
+                        .col-6.form-group
+                            input.form-control(type='text', name='userlevel', placeholder='ใส่ข้อมูลที่ต้องการแก้ไข', required, value=(editlevel.userlevel))
+                    .row
+                        .col-3.form-group
+                            button.btn.btn-block.btn-success(type='submit', onclick='alert("แก้ไขข้อมูลสำเร็จ")') แก้ไขข้อมูล
+                        .col-3.form-group
+                            a.text-decor-none(href='/backendx/user/level')
+                                button.btn.btn-block.btn-info(type='button') กลับ
+
+
+
+
+    //- USER POSITION PAGE
+    if userPos
+        .con-block
+            .container-fluid(style='margin-top:5px')
+                .row
+                    .col-12
+                        h4 จัดการตำแหน่ง
+                .row(style='margin-top: 10px; margin-bottom: 10px')
+                    .col-2
+                        a.text-decor-none(href='/backendx/user/position/insert')
+                            button.btn.btn-block.btn-success เพิ่มข้อมูล
+                    .col-2
+                        a.text-decor-none(href='/backendx/user/position/refresh')
+                            button.btn.btn-block.btn-light(style='border: 1px solid gray') Refresh Data
+
+            
+                .row.m-b-13
+                    .col-12.m-t-15.form-group
+                        span.m-r-6.txtth4(style='margin-bottom: 7px') Show
+                        select.m-r-6.selectpicker(id='maxRows' data-style='btn-dark' data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100  
+                        span.txtth4 enties   
+            
+                .row
+                    .col-6
+                        table.table.table-hover.table-bordered(id='mytable', style='margin-top:6px')
+                            thead
+                                tr.table-active
+                                    //- th id
+                                    th ตำแหน่งผู้ใช้
+                                    th ลบข้อมูล
+                            tbody
+                                each userPosx, key in userPos
+                                    tr
+                                        //- td= key + 1 
+                                        td
+                                            a.userlv-pos(href='/backendx/user/position/edit/' + userPosx.position)= userPosx.position
+                                            
+                                        td
+                                            button.delBlock.btn.btn-danger(class="btn-show-sidebar", id=(userPosx.position)) ลบข้อมูล
+
+
+                .row.m-b-17
+                    div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                        span.m-r-6 Showing
+                        span.m-r-6(id='firstNumShow')                      
+                        span.m-r-6 to                      
+                        span.m-r-6(id='lastNumShow')
+                        span.m-r-6 of                      
+                        span.m-r-6(id='totalShow')
+                        span.m-r-6 enties      
+                    div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                        nav
+                            ul.pagination                 
+                        
+
+                        
+                each userPosDel in userPos
+                    aside.sidebar.trans-2
+                        .container(style="margin-top: 5%;")
+                            .row.flex-c-m(style="text-align: center")
+                                .col-12 
+                                    .txtth3 คุณต้องการที่จะลบ ?
+                                    .txtth3= "ตำแหน่งผู้ใช้ " + userPosDel.position
+                            .row.flex-c-m(style="margin-top : 10px")
+                                .col-3
+                                    form(action='/backendx/user/position/del/' + userPosDel._id, method='post')
+                                        button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit', onclick='alert("ลบข้อมูลสำเร็จ")') Yes
+                                .col-3
+                                    a.text-decor-nonetrans-2.btn-hide-sidebar
+                                        button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No
+
+    
+    //- INSERT POSITION PAGE
+    if insertPos
+        .con-block
+            .container-fluid(style='margin-top:5px')
+                .row
+                    .col-12                 
+                        h4 เพิ่มระดับสมาชิก
+                form(action='/backendx/user/position/insert/add', method='post')
+                    .row
+                        .col-6.form-group
+                            input.form-control(type='text', name='userlevel', placeholder='เพิ่มระดับสมาชิก', required)
+                    .row
+                        .col-3.form-group
+                            button.btn.btn-block.btn-success(type='submit', onclick='alert("เพิ่มข้อมูลสำเร็จ")') เพิ่มข้อมูล
+                        .col-3.form-group
+                            a.text-decor-none(href='/backendx/user/level')
+                                button.btn.btn-block.btn-info(type='button') กลับ
+    
+    
+    
+    //- EDIT POSITION PAGE
+    if editPos
+        .con-block
+            .container-fluid(style='margin-top:5px')
+                .row
+                    .col-12                 
+                        h4 แก้ไขตำแหน่ง
+                form(action='/backendx/user/position/edit/' + editPos.position, method='post')
+                    .row
+                        .col-6.form-group
+                            input.form-control(type='text', name='position', placeholder='ใส่ข้อมูลที่ต้องการแก้ไข', required, value=(editPos.position))
+                    .row
+                        .col-3.form-group
+                            button.btn.btn-block.btn-success(type='submit', onclick='alert("แก้ไขข้อมูลสำเร็จ")') แก้ไขข้อมูล
+                        .col-3.form-group
+                            a.text-decor-none(href='/backendx/user/position')
+                                button.btn.btn-block.btn-info(type='button') กลับ
+
+
+
+    //- MANAGE USER PAGE
+    if userManage
+        .con-block
+            .container-fluid(style='margin-top: 5px')
+                .row
+                    .col-12
+                        h4 จัดการข้อมูลผู้ใช้
+                .row(style='margin-top: 10px; margin-bottom: 10px')
+                    .col-2
+                        a.text-decor-none(href='/backendx/user/manage/insert')
+                            button.btn.btn-block.btn-success เพิ่มข้อมูล
+                    .col-2
+                        a.text-decor-none(href='/backendx/user/manage/refresh')
+                            button.btn.btn-block.btn-light(style='border: 1px solid gray') Refresh Data
+                .row.m-b-13
+                    .col-12.m-t-15.form-group
+                        span.m-r-6 Show
+                        select.m-r-6.selectpicker(id='maxRows' data-style='btn-dark' data-width='fit')
+                            option(value='5000') Show All
+                            option(value='5') 5
+                            option(value='10') 10
+                            option(value='15') 15
+                            option(value='30') 30
+                            option(value='50') 50
+                            option(value='100') 100  
+                        span enties   
+
+        
+                .row.m-b-13
+                    .col-12
+                        table.table.table-hover.table-bordered(id='mytable', style='margin-top:5px')
+                            thead
+                                tr.table-active
+                                    //- th id
+                                    th ชื่อ - นามสกุล
+                                    th ชื่อผู้ใช้
+                                    th ระดับผู้ใช้
+                                    th ตำแหน่ง
+                                    th เบอร์โทรศัพท์
+                                    th E-mail
+                                    th Status
+                                    th
+                            tbody
+                                each userManagex, key in userManage
+                                    tr
+                                        //- td= key + 1
+                                        td= userManagex.firstname + ' ' + userManagex.lastname
+                                        td= userManagex.userlogin.username
+                                        td= userManagex.userlevel.userlevel
+                                        td= userManagex.userposition.position
+                                        td(class='phonex')= userManagex.phoneTel
+                                        td= userManagex.userlogin.email
+                                        td
+                                            div.blockx-status
+                                                span(class=(userManagex.status == 'Online' ? 'status-online' : 'status-offline'))
+                                                span(class='statusx')= userManagex.status
+                                        td
+                                            button.btn.btn-danger.delBlock.btn-show-sidebar(id=(userManagex.status)) ลบข้อมูล
+
+                .row.m-b-17
+                    div.p-l-15.flex-c-m.txtth5(style='left:0px')
+                        span.m-r-6 Showing
+                        span.m-r-6(id='firstNumShow')                      
+                        span.m-r-6 to                      
+                        span.m-r-6(id='lastNumShow')
+                        span.m-r-6 of                      
+                        span.m-r-6(id='totalShow')
+                        span.m-r-6 enties      
+                    div.p-r-25.p-b-15(style='position:absolute;right:0px;')
+                        nav
+                            ul.pagination                        
+                    
+
+                        
+            each userManagex in userManage
+                aside.sidebar.trans-2
+                    .container(style="margin-top: 5%;")
+                        .row.flex-c-m(style="text-align: center")
+                            .col-12 
+                                .txtth3 คุณต้องการที่จะลบ ?
+                                .txtth3= "ผู้ใช้ " + userManagex.userlogin.username
+                        .row.flex-c-m(style="margin-top : 10px")
+                            .col-3
+                                form(action='/backendx/user/manage/del/' + userManage._id, method='post')
+                                    button.btn.btn-danger.border-r-10.btn-block(style="width: 100px;height: 40px;", type='submit', onclick='alert("ลบข้อมูลสำเร็จ")') Yes
+                            .col-3
+                                a.text-decor-nonetrans-2.btn-hide-sidebar
+                                    button.btn.btn-warning.border-r-10.btn-block(style="width: 100px;height: 40px;") No
+    
+    if insertUser
+        .con-block
+            .container-fluid
+                .row
+                    .col
+                        h4 เพิ่มผู้ใช้ใหม่
+
+            form(action='/backendx/user/manage/insert/success', method='post', enctype="multipart/form-data")
+                .container-fluid
+                    .row
+                        .col-6.form-group
+                            label Username
+                            input.form-control(type='text', name='username', placeholder='ชื่อผู้ใช้', value='', required)
+                    .row    
+                        .col-6.form-group
+                            label Password
+                            input.form-control(type='password', name='password', placeholder='รหัสผ่าน', value='', required)
+                    .row                            
+                        .col-6.form-group
+                            label Password Confirm
+                            input.form-control(type='password', name='passwordConf', placeholder='ยืนยันรหัสผ่าน', required)
+                    .row                            
+                        .col-3.form-group
+                            label ระดับสมาชิก
+                            select.form-control(name='userlevel' ,value='', required)
+                                option(value='', hidden, selected) เลื่อกระดับสมาชิก...
+                                each userLvDatax in userLvData
+                                    option(value=(userLvDatax._id))= userLvDatax.userlevel                        
+                        .col-3.form-group
+                            label ตำแหน่ง
+                            select.form-control(name='userposition', value='', required)
+                                option(value='', hidden, selected) เลื่อกตำแหน่งสมาชิก...
+                                each userPosDatax in userPosData
+                                    option(value=(userPosDatax._id))= userPosDatax.position
+                    .row                        
+                        .col-3.form-group
+                            label ชื่อ
+                            input.form-control(type='text', name='firstname', required)                        
+                        .col-3.form-group
+                            label นามสกุล
+                            input.form-control(type='text', name='lastname', required)
+                    .row
+                        .col-3.form-group
+                            label E-mail
+                            input.form-control(type='email', name='email', pattern='.+@.+.', title='คุณใส่ E-mail ไม่ถูกต้อง', placeholder='examp: test@test.com', required)
+                        .col-3.form-group
+                            label เบอร์โทรศัพท์
+                            input.form-control#phonemask(type='text', name='phoneTel', required)
+                    .row
+                        .col-6.form-group
+                            div(class="input-group-prepend" style='height:40px')
+                                span.input-group-text Upload
+                                input(type='file', name='file1', class='form-control' style='height:40px')
+                    .row                            
+                        .col-6.form-group
+                            label ที่อยู่
+                            textarea.form-control(type='text', name='contact')
+                    .row
+                        .col-3
+                            button.btn.btn-success.btn-block(type='submit') เพิ่มข้อมูล
+                        .col-3
+                            a.text-decor-none(href='/backendx/user/manage')
+                                button.btn.btn-info.btn-block(type='button') กลับ
+
+    //- TEST
+    //- if testPagination
+    //-     .con-block
+    //-         .container-fluid
+    //-             .row
+    //-                 - for(var i = 0; i < userListx.length ; i++)
+    //-                     .col-md-4
+    //-                         .thumbnail
+    //-                             .caption
+    //-                                 h3= userListx[i].username
+    //-                                 p= userListx[i].firstname
+    //-                                 p= userListx[i].lastname
+
+    //-         hr
+    //-         nav(aria-label='test result')
+    //-             - if(pages > 0)
+    //-                 ul.pagination
+    //-                     - if(current == 1) 
+    //-                         li.page-item.disabled
+    //-                             a.page-link First
+    //-                     - else
+    //-                         li.page-item
+    //-                             a.page-link(href='/backendx/user/manage/1') First
+                        
+    //-                     - var i = (Number(current) > 5 ? Number(current) - 4 : 1)
+    //-                     - if(i !== 1)
+    //-                         li.page-item.disabled ...
+    //-                     - for(; i < (Number(current) + 4) && i <= pages ; i++)
+    //-                         - if(i == current)
+    //-                             li.page-item.active
+    //-                                 a.page-link= i
+    //-                         - else
+    //-                             li.page-item
+    //-                                 a.page-link(href=('/backendx/user/manage/' + i))= i
+                            
+    //-                         - if(i == Number(current) + 4 && i < pages)
+    //-                             li.page-item.disabled ...
+                            
+    //-                         - if(current == pages)
+    //-                             li.page-item.disabled 
+    //-                                 a.page-link Last
+    //-                         - else
+    //-                             li.page-item
+    //-                                 a.page-link(href=('/backendx/user/manage/' + pages)) Last

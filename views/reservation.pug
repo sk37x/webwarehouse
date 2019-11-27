@@ -1,0 +1,209 @@
+extends layout
+
+block content
+
+    section.img-head.p-all-10.p-t-150.p-b-135.flex-c-m(style="background-image: url(images/bg/bg-contact.jpg)")
+        h2.tit3cpcolwhite.t-center reservation
+    
+    section.section-reservation
+        .container-fluid
+            .row
+                .col-12
+                    h4.tit2.t-center reservation
+                    h4.tit3.cpsp.t-center booktab
+    
+        .container
+            .row
+                if rooms 
+                    .col-xl-6.col-sm-12.p-t-30
+                        
+                        h4.txtth3 ห้องพัก    
+                        h4.txtth4= 'ประเภท' + ' ' + rooms.room_category 
+                        h4.txtth4.m-b-13
+                            span ราคาทั่วไป 
+                            span= rooms.price  
+                            span  /  
+                            span ราคาราชการ  
+                            span= rooms.price_discount
+                        .row
+                            .col-12
+                                .con-block
+                                    img#expandedImg.img-block(src="images/hostel0.jpg")
+                                    #img-lstx
+                                        ul(style="display:flex;padding-top: 5px;")
+                                            li
+                                                img#img-select-1.img-minix.trans-2(src="images/hostel0.jpg" onclick="openImg(this);")
+                                            li
+                                                img#img-select-2.img-minix.trans-2(src="images/hostel7.jpg" onclick="openImg(this);")
+                                            li
+                                                img#img-select-3.img-minix.trans-2(src="images/hostel10.jpg" onclick="openImg(this);")
+                                            li
+                                                img#img-select-4.img-minix.trans-2(src="images/hostel26.jpg" onclick="openImg(this);")
+                    .col-xl-6.col-sm-12
+                        form(action="/room", method="post")
+                            input(type='hidden', name='book_from', value='By Client')
+                            input(type='hidden', name='price', value='800')
+                            input(type='hidden', name='price_discount', value='700')
+                            - if(rooms.room_category == 'Rooms')
+                                .row
+                                    .form-group.col-6.p-t-30
+                                        label Room Category
+                                        select(type="text" class="form-control ui-buttonx trans-2" name="book_roomtype" placeholder="Room Category")
+                                            option(value=(rooms.room_category) selected)= rooms.room_category
+                                    .form-group.col-6.p-t-30
+                                        label Room Format
+                                        select(type="text" class="form-control ui-buttonx trans-2" name="book_roomname" placeholder="Room Name")
+                                            option(value=(rooms.room_name) selected)= rooms.room_name
+                                .row
+                                    .form-group.col-6.p-t-30
+                                        label Check In
+                                        input(type="text" class="form-control ui-buttonx trans-2" name="book_chkin" id="dateCin" placeholder="YYYY-MM-DD" value="")    
+                                    .form-group.col-6.p-t-30
+                                        label Check Out
+                                        input(type="text" class="form-control ui-buttonx trans-2" name="book_chkout" id="dateCout" placeholder="YYYY-MM-DD" value="")
+                                        input(type='hidden', value=(rooms.price), name='price')
+                                        input(type='hidden', value=(rooms.price_discount), name='price_discount')
+                                .row
+                                    .form-group.col-12.p-t-30
+                                        label Person*
+                                        input(type="number" class="form-control ui-buttonx trans-2" name="book_person" placeholder="Person" value='1' required)
+                                .row
+                                    .form-group.col-6
+                                        label Adult
+                                        input.form-control(type='number', name='book_adult' value='1')
+                                    
+                                    .form-group.col-6
+                                        label Childen
+                                        input.form-control(type='number', name='book_child' default='0')
+                            - else
+                                .row
+                                    .form-group.col-6.p-t-30
+                                        label Room Type
+                                        select(type="text", class="form-control ui-buttonx trans-2", name="book_roomtype")
+                                            option(value=(rooms.room_category) selected)= rooms.room_category
+                                    .form-group.col-6.p-t-30
+                                        label Room Type
+                                        select(type="text" class="form-control ui-buttonx trans-2" name="book_roomname")
+                                            option(value=(rooms.room_name) selected)= rooms.room_name
+                                    .form-group.col-12.p-t-30
+                                        label Check In
+                                        input(type="text" class="form-control ui-buttonx trans-2" name="book_chkin" id="dateCin" placeholder="YYYY-MM-DD" value="")    
+                                        //- input(type="hidden" class="form-control ui-buttonx border-r-10 trans-2" name="book_chkout" id="dateCin" placeholder="MM/DD/YYYY" value="")    
+                                        input(type='hidden', value=(rooms.price), name='price')
+                                        input(type='hidden', value=(rooms.price_discount), name='price_discount')
+                                .row
+                                    .form-group.col-12.p-t-30
+                                        h5 Time*
+                                        select(type="number" class="form-control ui-buttonx trans-2" name="book_timer" placeholder="Time" value='' required)
+                                            option(value='' selected)
+                                            //- - var time = {a1 : '08.30', a2 : '12.00'}
+                                            
+                                            option(value=('T1 ' + ':' + ' 08.30 - 12.00 น.')) 08.30 - 12.00 น. 
+                                            option(value=('T2 ' + ':' + ' 13:00 - 17:00 น.')) 13:00 - 17:00 น.
+                                            option(value=('T3 ' + ':' + ' 18:00 - 22:00 น.')) 18:00 - 22:00 น.
+
+                           
+                            .row                                                                                
+                                .form-group.col-12.p-t-30
+                                    h5 Name*
+                                    input(type="text" class="form-control" name="book_name" placeholder="Name" required value="")
+                                .form-group.col-6.p-t-30
+                                    h5 Phone*
+                                    input#phonemask(type="text", class="form-control" name="book_phone" placeholder="Phone", required, value="")
+                                .form-group.col-6.p-t-30
+                                    h5 E-mail *
+                                    input(type="email" class="form-control" name="book_email" placeholder="youremail@example.xyz", pattern='.+@.+.', title='คุณใส่ E-mail ไม่ถูกต้อง' value='')
+                                .form-group.col-12.p-t-30
+                                    h5 Spacial
+                                    textarea(type="text" class="form-control min-h-150 p-t-30 p-l-30 border-r-10" name="book_spacial" placeholder="Spacial" value='')
+                                .form-group.flex-c-m.col-6.m-t-13
+                                    button(type="submit" class="btn btn-dark btn-block border-r-10 p-all-10" ) SUBMIT
+                                .form-group.flex-c-m.col-6.m-t-13
+                                    button(class="btn btn-light btn-block border-r-10 p-all-10" style="border: 1px solid gray", onclick='window.history.back();') BACK
+
+
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                if roomx 
+                    .col-xl-6.col-sm-12.p-t-30
+                        
+                        h4.txtth3 ห้องพัก    
+                        h4.txtth4= 'ประเภท' + ' ' + roomx.room_category 
+                        h4.txtth4.m-b-13
+                            span ราคาทั่วไป 
+                            span= roomx.price  
+                            span  /  
+                            span ราคาราชการ  
+                            span= roomx.price_discount
+                        .row
+                            .col-12
+                                .con-block
+                                    img#expandedImg.img-block(src="images/hostel0.jpg")
+                                    #img-lstx
+                                        ul(style="display:flex;padding-top: 5px;")
+                                            li
+                                                img#img-select-1.img-minix.trans-2(src="images/hostel0.jpg" onclick="openImg(this);")
+                                            li
+                                                img#img-select-2.img-minix.trans-2(src="images/hostel7.jpg" onclick="openImg(this);")
+                                            li
+                                                img#img-select-3.img-minix.trans-2(src="images/hostel10.jpg" onclick="openImg(this);")
+                                            li
+                                                img#img-select-4.img-minix.trans-2(src="images/hostel26.jpg" onclick="openImg(this);")
+                    .col-xl-6.col-sm-12
+                        form(action="/room", method="post")
+                            .row
+                                .form-group.col-6.p-t-30
+                                    h5 Room Category
+                                    select(type="text" class="form-control ui-buttonx border-r-10 trans-2" name="book_roomtype" placeholder="Room Category")
+                                        option(value=(roomx.room_category) selected)= roomx.room_category
+                                .form-group.col-6.p-t-30
+                                    h5 Room Format
+                                    select(type="text" class="form-control ui-buttonx border-r-10 trans-2" name="book_roomname" placeholder="Room Name")
+                                        option(value=(roomx.room_name) selected)= roomx.room_name
+                                .form-group.col-6.p-t-30
+                                    h5 Check In
+                                    input(type="text" class="form-control ui-buttonx border-r-10 trans-2" name="book_chkin" id="dateCin" placeholder="YYYY-MM-DD" value="")    
+                                .form-group.col-6.p-t-30
+                                    h5 Check Out
+                                    input(type="text" class="form-control ui-buttonx border-r-10 trans-2" name="book_chkout" id="dateCout" placeholder="YYYY-MM-DD" value="")
+                                    input(type='hidden', value=(roomx.price), name='price')
+                                    input(type='hidden', value=(roomx.price_discount), name='price_discount')
+                                    
+                            .row
+                                .form-group.col-12.p-t-30
+                                    h5 Person*
+                                    input(type="number" class="form-control ui-buttonx border-r-10 trans-2" name="book_person" placeholder="Person" value='' required)
+                            .row
+                                .form-group.col-6.p-t-30
+                                    h5 Adult
+                                    input(type="number" class="form-control ui-buttonx border-r-10 trans-2" name="book_adult" placeholder="Person" value='')
+                                .form-group.col-6.p-t-30
+                                    h5 Child
+                                    input(type="number" class="form-control ui-buttonx border-r-10 trans-2" name="book_child" placeholder="Person" value='')
+                            .row                                                                                
+                                .form-group.col-12.p-t-30
+                                    h5 Name*
+                                    input(type="text" class="form-control border-r-10" name="book_name" placeholder="Name" required value="")
+                                .form-group.col-12.p-t-30
+                                    h5 Phone*
+                                    input(type="text", id='phonemask', class="form-control border-r-10" name="book_phone" placeholder="Phone" required value="")
+                                .form-group.col-12.p-t-30
+                                    h5 E-mail *
+                                    input(type="text" class="form-control border-r-10" name="book_email" placeholder="E-mail" value='')
+                                .form-group.col-12.p-t-30
+                                    h5 Spacial
+                                    textarea(type="text" class="form-control min-h-150 p-t-30 p-l-30 border-r-10" name="book_spacial" placeholder="Spacial" value='')
+                                .form-group.flex-c-m.col-12.m-t-13
+                                    button(type="submit" class="btn btn-dark border-r-10 p-all-10" style="width:120px; height: 50px;") SUBMIT
+
+

@@ -1,0 +1,173 @@
+extends layout
+
+block content
+
+    section.img-head.flex-c-m(style="background-image: url(images/bg/bg-contact.jpg)")
+        h4.tit3cpcolwhite rooms
+
+    if room
+        section.section-roomservice
+            .container
+                .row.p-b-13
+                    .col-12.t-center
+                        h3.tit3 our room
+                        hr
+                each roomm in room
+                    .row.p-b-13
+                        .col-3.t-center
+                            img.img-mini(src="images/hostel0.jpg")
+                        .col-7.rm-info
+                            h4.txt2-5= roomm.room_category
+                            p
+                                span.txt3 Descript
+
+                            hr
+                        .col-2.t-center.m-t-50
+               
+                            a(href="/room/" + roomm.room_category)
+                                button.btn.btn-dark.btn-block(type='button' id='mtroom') More Info
+                    //- hr.p-b-13
+                    //- .row.p-b-13
+                    //-     .col-3.t-center
+                    //-         img.img-mini(src="images/hostel0.jpg")
+                    //-     .col-7.rm-info
+                    //-         h4.txt2-5 Meeting Room
+                    //-         p
+                    //-             span.txt3 Descript
+                    //-         div    
+                    //-             ul.txt4.p-l-20
+                    //-                 li 
+                    //-                     span Size : 2 Person
+                    //-                 li   
+                    //-                     span Size : 2 Person
+                    //-         hr
+                    //-     .col-2.t-center.m-t-30
+                    //-         h3.tit3 250
+                    //-         a(href="/room/Meeting Rooms")
+                    //-             button.btn.btn-dark.btn-block(type='button' id='meetingroom') More Info
+                    //- hr.p-b-13
+                    //- .row.p-b-13
+                    //-     .col-3.t-center
+                    //-         img.img-mini(src="images/hostel0.jpg")
+                    //-     .col-7.rm-info
+                    //-         h4.txt2-5 Room
+                    //-         p
+                    //-             span.txt3 Descript
+                    //-         div    
+                    //-             ul.txt4.p-l-20
+                    //-                 li 
+                    //-                     span= 'Size : ' + room.size_des
+                    //-                 li   
+                    //-                     span= 'Bed : ' + room.size
+                    //-         hr
+                    //-         div    
+                    //-             ul.amenities.flex-c-m(style='justify-content: flex-start; list-style: none;')
+                    //-                 li.showx
+                    //-                     div
+                    //-                         <i class="fas fa-snowflake"></i>
+                    //-                         span.hideText Hello
+                    //-                 li.showx
+                    //-                     div 
+                    //-                         <i class="fas fa-wifi"></i>
+                    //-                         span.hideText Hello1
+                    //-                 li.showx
+                    //-                     div 
+                    //-                         <i class="fas fa-tv"></i>
+                    //-                         span.hideText Hello2
+                    //-                 li.showx
+                    //-                     div 
+                    //-                         <i class="fas fa-phone"></i>
+                    //-                         span.hideText Hello3
+                    //-                 li.showx
+                    //-                     div 
+                    //-                         <i class="fas fa-bath"></i>
+                    //-                         span.hideText Hello4
+                            
+                    //-     .col-2.t-center.m-t-30
+                    //-         h3.tit3 250
+                    //-         a(href="/room/sing-couple")
+                    //-             button.btn.btn-dark.btn-block(type='button' id="rooms") More Info
+                    hr.p-b-13
+
+
+        
+    if roomone
+        section.section-roomservice
+            .container
+                each roomx in roomone   
+                    .row.p-b-13
+                        .col-3.t-center
+                            img.img-mini(src="images/hostel0.jpg")
+                        .col-7.rm-info
+                            h4.txt2-5=  '' + roomx.room_name
+                            p
+                                span.txtth4= roomx.room_description
+                            div    
+                                ul.txt4.p-l-20
+                                    li 
+                                        span= 'Size : ' + roomx.size_des
+                                    - if(roomx.room_category == 'Rooms')
+                                        li   
+                                            span= 'Bed : ' + roomx.size
+                                    
+                            hr
+                            div
+                               
+                                ul.amenities.flex-c-m(style='justify-content: flex-start; list-style: none;')
+                                    each util in utility
+                                        li.showx
+                                            div 
+                                                i(class=util.utilSVG)
+                                                span.hideText= util.utilName
+                                    //- li.showx
+                                    //-     div 
+                                    //-         <i class="fas fa-tv"></i>
+                                    //-         span.hideText Hello2
+                                    //- li.showx
+                                    //-     div 
+                                    //-         <i class="fas fa-phone"></i>
+                                    //-         span.hideText Hello3
+                                    //- li.showx
+                                    //-     div 
+                                    //-         <i class="fas fa-bath"></i>
+                                    //-         span.hideText Hello4
+                        .col-2.t-center.m-t-30
+                            p start
+                            h3.tit3= roomx.price + ' B'
+                            a.btn.btn-dark.btn-block(href=('/room/'+ roomx.room_category + '/' + roomx._id)) BOOK NOW
+                    hr.p-b-13
+
+                .row
+                    .col
+                        a(href="/room")
+                            button.btn.btn-dark.btn-block(type="button") GO BACK
+                    
+
+    //- if rooms
+        section.section-roomservice
+            .container
+                each room in rooms   
+                    .row.p-b-13
+                        .col-3.t-center
+                            img.img-mini(src="images/hostel0.jpg")
+                        .col-7.rm-info
+                            h4.txt2-5=  '' + room.room_name
+                            p
+                                span.txt3= room.room_description
+                            div    
+                                ul.txt4.p-l-20
+                                    li 
+                                        span Size : 2 Person
+                                    li   
+                                        span Size : 2 Person
+                            hr
+                        .col-2.t-center.m-t-30
+                            h3.tit3 250
+                            a.btn.btn-dark.btn-block(href=('/room/'+ room.room_category + '/' + room._id)) BOOK NOW
+                    hr.p-b-13
+
+                .row
+                    .col
+                        a(href="/room")
+                            button.btn.btn-dark.btn-block(type="button") GO BACK
+                    

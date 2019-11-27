@@ -1,0 +1,9 @@
+db.rooms.insertMany([{room_category : "single room", room_name : "single", room_description : "รายละเอียด", size_des : "1-2", size : 1, price : 800, price_discount : 700}, 
+{room_category : "couple room", room_name : "couple", room_description : "รายละเอียด", size_des : "1-2", size : 1, price : 800, price_discount : 700},
+{room_category : "vip room", room_name : "vip 2", room_description : "รายละเอียด", size_des : "10-30", size : 20, price : 2500, price_discount : 2000, status : "active"},
+{room_category : "vip room", room_name : "vip 3", room_description : "รายละเอียด", size_des : "10-30", size : 20, price : 2500, price_discount : 2000, status : "active"},
+{room_category : "meeting room", room_name : "จันทรา 1", room_description : "รายละเอียด", size_des : "30-60", size : 30, price : 5000, price_discount : 4000, status : "active"},
+{room_category : "meeting room", room_name : "จันทรา 2", room_description : "รายละเอียด", size_des : "30-60", size : 30, price : 5000, price_discount : 4000, status : "active"},
+{room_category : "meeting room", room_name : "จันทรา 3", room_description : "รายละเอียด", size_des : "30-60", size : 30, price : 5000, price_discount : 4000, status : "active"},
+{room_category : "meeting room", room_name : "อินทนิล", room_description : "รายละเอียด", size_des : "80-120", size : 80, price : 8000, price_discount : 6400, status : "active"},
+{room_category : "meeting room", room_name : "ราชพฤกษ์", room_description : "รายละเอียด", size_des : "80-120", size : 80, price : 8000, price_discount : 6400, status : "active"}]);

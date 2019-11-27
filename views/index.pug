@@ -1,0 +1,81 @@
+extends layout
+
+block content
+  title = title
+  
+
+  .slider.block.trans-2
+    ul
+      li
+        img(src="images/Hostel0.jpg", alt="first")
+      li
+        img(src="images/Hostel37.jpg", alt="secound")
+      li
+        img(src="images/Hostel7.jpg", alt="third")
+      li
+        img(src="images/Hostel10.jpg", alt="last")
+    .slider-nav
+      a.prev(data-nav="prev") &#10094;
+      a.next(data-nav="next") &#10095;
+
+  hr(style="background-color: goldenrod;")
+
+  .section-welcome
+    .container
+      .row
+        .col-6
+          .warp_text_welcome
+            span.tit2 Chandrakasem Park
+            h4.tit3 WELCOME
+            span.tit4 description
+        .col-6
+          .warp_image_welcome.overlay
+            img(src="images/Hostel10.jpg")
+
+  hr(style="background-color: goldenrod")
+
+  .content-info
+    .container
+      .row
+        each roomCate in roomCategorys
+          .col-md-4.p-t-30.p-b-30
+            .block
+              .warp-img-block.clear-img.overlay
+                a
+                  img(src="images/Hostel26.jpg")
+              .warp-text-block
+                a(href="#")
+                  h4.txt2.color0-hov.trans-2(style="margin-bottom: 20px;")= roomCate.room_category
+                p
+                  span &nbsp;&nbsp;
+                  span= roomCate.room_description
+                a(href="")
+                  p.txt3.color0-hov.trans-2 READ MORE 
+                    i(class="fas fa-arrow-right")
+        //- .col-md-4.p-t-30.p-b-30
+        //-   .block
+        //-     .warp-img-block.clear-img.overlay
+        //-       a
+        //-         img(src="images/Hostel26.jpg")
+        //-     .warp-text-block
+        //-       a(href="#")
+        //-         h4.txt2.color0-hov.trans-2(style="margin-bottom: 20px;") VIP
+        //-       p description ROOM
+        //-       a(href="")
+        //-         p.txt3.color0-hov.trans-2 READ MORE 
+        //-           i(class="fas fa-arrow-right")
+        //- .col-md-4.p-t-30.p-b-30
+        //-   .block
+        //-     .warp-img-block.clear-img.overlay
+        //-       a
+        //-         img(src="images/Hostel26.jpg")
+        //-     .warp-text-block
+        //-       a(href="#")
+        //-         h4.txt2.color0-hov.trans-2(style="margin-bottom: 20px;") Private ROOM
+        //-       p description ROOM
+        //-       a(href="")
+        //-         p.txt3.color0-hov.trans-2 READ MORE 
+        //-           i(class="fas fa-arrow-right")             
+
+  hr(style="background-color: goldenrod")
+      

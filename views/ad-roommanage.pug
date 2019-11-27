@@ -1,0 +1,222 @@
+extends layoutuser
+
+block content
+
+    if roomCate
+        .container-fluid
+            .row(style='margin-bottom: 5px')
+                .col
+                    h2 รายการห้องพัก (CHECK IN)
+        .con-block
+            .container-fluid
+                .row.m-a-10
+                    .col-12.m-a-10
+                        h3 Room Category
+                .row
+                    each roomcate in roomCate
+                        .col-4(style='margin-bottom: 20px')   
+                            a.text-decor-none(href='/backendx/' + roomcate.room_category, style="text-decoration:none !important")
+                                button.btn.btn-primary.btn-block
+                                    h4= roomcate.room_category
+
+
+    if allroom
+        .container-fluid
+            .row(style='margin-bottom: 5px')
+                .col
+                    h2 รายการห้องพัก (CHECK IN)
+        .con-block
+            .container-fluid
+                .row.m-a-10
+                    .col-8
+                        h3= roomname
+                    .col-4
+                        .flex-c-m(style="float: right")
+                            a.text-decor-none(href='/backendx/' , style="text-decoration:none !important;")
+                                button.btn.btn-primary(style="width: 200px ; height: 45px;") กลับ 
+                .row.m-a-10
+                    each allrooms in allroom
+                        .col-3
+                            a.text-decor-none(href='/backendx/' + allrooms.room_category + '/' + allrooms._id)
+                                button.btn.btn-block(style="margin-bottom: 8px", class=(allrooms.status == 'Available' ? 'btn-success' : 'btn-warning'))
+                                    p= allrooms.room_type + ', ' + allrooms.room_num
+                                    p= allrooms.room_category + ', '
+                                        q= allrooms.status
+                //- .row.m-a-10
+                //-     .col-12
+                //-         .flex-c-m(style="float: right")
+                //-             a.text-decor-none(href='/backendx/' , style="text-decoration:none !important;")
+                //-                 button.btn.btn-primary(style="width: 200px ; height: 45px;margin-right: 20px") กลับ 
+
+
+    if roombyid
+        .container-fluid
+            .row(style='margin-bottom: 5px')
+                .col
+                    h2 รายการห้องพัก (CHECK IN)
+        .con-block
+            .container-fluid
+                .row(style="margin-bottom: 5px")
+                    .col-12
+                        h3 ผู้ทำรายการ
+                        hr
+                
+                form(action=(roombyid.status === 'Busy' ? '' : '/backendx/' + roombyid.room_category + '/' + roombyid._id + '/xchkin' ) , method=(roombyid.status == 'Busy' ? '' : 'post'))
+                    .row
+                        .col-6
+                            
+                            input(type='hidden', name='book_roomNo', value=(roombyid.room_num))
+                            input(type='hidden', name='book_roomtype', value=(roombyid.room_category))
+                            input(type='hidden', name='book_roomname', value=(roombyid.room_type))
+                            input(type='hidden', name='book_req_status', value=(roombyid.status == 'Busy' ? 'check-out' : 'check-in'))
+                            input(type='hidden', name='price', value=(roombyid.price))
+                            input(type='hidden', name='price_discount', value=(roombyid.price_discount))
+                            input(type='hidden', id='roomstat', value=(roombyid.status))
+                            input(type='hidden', name='book_from', value='By Staff')
+                            .row(style="margin-bottom: 5px")
+                                .form-group.col-6
+                                    label ชื่อ - สกุล
+                                    input.ckin.form-control.border-r-10.np-blockx(type="text", name='book_name', require, placeholder="ชื่อ - สกุล ผู้จอง", value=(roombyid.status === 'Busy' ? person.book_name : ''))
+                            .row(style="margin-bottom: 5px")
+                                .form-group.col-6
+                                    label เบอร์โทรศัพท์
+                                    input.ckin.form-control.border-r-10.np-blockx#phonemask(type="text", name='book_phone', placeholder="เบอร์โทรศัพท์ ผู้จอง", value=(roombyid.status === 'Busy' ? person.book_phone : '') )
+                            .row(style="margin-bottom: 5px")
+                                .form-group.col-6
+                                    label E-mail
+                                    input.ckin.form-control.border-r-10.np-blockx(type="email", name='book_email', pattern='.+@.+.', title='คุณใส่ E-mail ไม่ถูกต้อง', placeholder="E-mail ผู้จอง", value=(roombyid.status === 'Busy' ? person.book_email : '') )
+                            .row(style="margin-bottom: 5px")
+                                .form-group.col-6
+                                    label อื่น ๆ 
+                                    textarea.form-control.np-blockx.border-r-10(name='book_spacial', style='min-h-150 p-t-30 p-l-30 border-r-10', placeholder="อื่น ๆ", value=(roombyid.status === 'Busy' ? person.book_spacial : ''))
+                       
+                        .col-6
+                            .row
+                                h5.txtth5= 'ประเภทห้อง ' + roombyid.room_category
+                            .row
+                                h5.txtth5= 'ห้อง ' + roombyid.room_type + ' ' + roombyid.room_num
+                            .row
+                                h4 ราคาห้องพัก
+                            .row
+                                if (roombyid.status === 'Available')
+                                    .form-check.col-12
+                                        p ราคา 
+                                        input.ckin.form-check-input.m-l-none(class=(roombyid.room_category === "Rooms" ? 'chk' : 'chkx'), style='margin-right: 5px', type='radio', name='newPrice', value=(roombyid.price), required) 
+                                        label.txtth5(for=(roombyid.price), style="margin-left: 17px;")= 'เรททั่วไป ' + roombyid.price + ' / ' + 'วัน'
+                                    .form-check.col-12
+                                        input.ckin.form-check-input.m-l-none(class=(roombyid.room_category === "Rooms" ? 'chk' : 'chkx'), type='radio', name='newPrice', value=(roombyid.price_discount), required) 
+                                        label.txtth5(for=(roombyid.price_discount), style="margin-left: 17px;")= 'เรทราชการ ' + roombyid.price_discount + ' / ' + 'วัน'                        
+                                else  
+                                    .form-group.col-12
+                                        h5.txtth5 ราคา
+                                        input.ckin.form-control.ui-buttonx(name='newPrice', value=(person.newPrice), readonly)
+
+                            if roombyid.room_category === 'Rooms'    
+                                .row(style='margin-top: 10px')
+                                    .form-group.col-6
+                                        h5.txtth5 Check In
+                                        //- var datecin = new Date()
+                                        input.ckin.form-control.ui-buttonx(id='datecin', name='book_chkin', type='text', placeholder='ปปปป-ดด-วว', onchange='console.log(this.value);', value=(roombyid.status === 'Busy' ? person.book_chkin.getDate() + '/' + person.book_chkin.getMonth() + '/' + person.book_chkin.getFullYear() : ''))
+                                    .form-group.col-6
+                                        h5.txtth5 Check Out
+                                        input.ckin.form-control.ui-buttonx(id='datecout', name='book_chkout', type='text', placeholder='ปปปป-ดด-วว', value=(roombyid.status === 'Busy' ? person.book_chkout.getDate() + '/' + person.book_chkout.getMonth() + '/' + person.book_chkout.getFullYear() : ''))
+                                    .form-group.col-6
+                                        h5.txtth5 จำนวนวันทั้งหมด
+                                        input.ckin.form-control(id='ntotaltimex', name='totaltimex', readonly, style="cursor: pointer", value=(roombyid.status === 'Busy' ? person.totaltimex : ''))
+                                    .form-group.col-6
+                                        h5.txtth5 ราคาทั้งหมด
+                                        input.ckin.form-control(id='ntotalpricex', name='totalprice', readonly, style="cursor: pointer", value=(roombyid.status === 'Busy' ? person.totalprice : ''))
+                                
+                                
+                                
+                                .row
+                                    .form-group.col-12
+                                        h5.txtth5 จำนวนผู้เข้าพัก
+                                        input.ckin.form-control.border-r-10(type="number", name='book_person', placeholder=" ", value=(roombyid.status === 'Busy' ? person.book_person : '') )
+                                .row        
+                                    .form-group.col-6 
+                                        h5.txtth5 ผู้ใหญ่   
+                                        input.ckin.form-control.border-r-10(type="number", name='book_adult', placeholder=" ", value=(roombyid.status === 'Busy' ? person.book_adult : ''))
+                                    .form-group.col-6    
+                                        h5.txtth5 เด็ก
+                                        input.ckin.form-control.border-r-10(type="number", name='book_child', placeholder=" ", value=(roombyid.status === 'Busy' ? person.book_child : ''))
+                                    - if(roombyid.status == 'Busy')
+                                        .form-group.col-12
+                                            a.btn-show-sidebar.btn.btn-warning.ckin.btn-block Check out
+                                    - else
+                                        .form-group.col-12
+                                            button.btn.btn-primary.ckin.btn-block(type='submit') Check in
+                            else 
+                                .row(style='margin-top: 10px')
+                                    .form-group.col-12
+                                        label Check In
+                                        input.form-control.ui-buttonx(id='datecin', type='text', name='book_chkin' value=(roombyid.status === 'Busy' ? person.book_chkin : ''), required)
+                                    //- .form-group.col-6
+                                    //-     label เวลา
+                                    //-     input.form-control(type='text', name='book_timer')
+                                //- .row(style='margin-top: 10px')
+                                //-     .form-group.col-6(style='margin-bottom: 0px')
+                                //-         label Time Select
+                                .row#secprice(style='margin-top: 10px')
+                                    if (roombyid.status === 'Available')
+                                        .form-group.col-6
+                                            //- input#timesec(type='hidden', value=(cin.book_timer))
+                                            label Time Select
+                                            input#timesec(type='hidden')
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb1', type='checkbox', name='book_timer_T1', value='1')
+                                                label.form-check-label#tboncb1(for="cb1") T1 : 08.30 - 12.00 น.
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb2', type='checkbox', name='book_timer_T2', value='1')
+                                                label.form-check-label#tboncb2(for="cb2") T2 : 13.00 - 17.00 น.
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb3', type='checkbox', name='book_timer_T3', value='1')
+                                                label.form-check-label#tboncb3(for="cb3") T3 : 18.00 - 22.00 น.
+                                        .form-group.col-6
+                                            label.txtth5 จำนวนช่วง 
+                                                input.form-control.border-r-10#logchk(name='logchk', style='margin-bottom: 6px;', readonly)
+                                            h5.txtth5 ราคาทั้งหมด
+                                                input.form-control.border-r-10#totalprice(type='text', name='totalprice' value=(roombyid.status === 'Busy' ? person.totalprice : ''), readonly)
+                                    else    
+                                        .form-group.col-6
+                                            //- input#timesec(type='hidden', value=(cin.book_timer))
+                                            input#timesec(type='hidden')
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb1', type='checkbox', name='book_timer_T1', value='1', checked=(person.book_timer_T1 == true ? true : false), onclick='return false;')
+                                                label.form-check-label#tboncb1(for="cb1") T1 : 08.30 - 12.00 น.
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb2', type='checkbox', name='book_timer_T2', value='1', checked=(person.book_timer_T2 == true ? true : false), onclick='return false;')
+                                                label.form-check-label#tboncb2(for="cb2") T2 : 13.00 - 17.00 น.
+                                            .form-check
+                                                input.form-check-input.chk_t1(id='cb3', type='checkbox', name='book_timer_T3', value='1', checked=(person.book_timer_T3 == true ? true : false), onclick='return false;')
+                                                label.form-check-label#tboncb3(for="cb3") T3 : 18.00 - 22.00 น.
+                                        .form-group.col-6
+                                            h5.txtth5= `จำนวนช่วง : `
+                                                span.txtth5#logchk(name='logchk',style='margin-bottom: 6px')=(person.logchk == null ? '' : person.logchk)
+                                            h5.txtth5 ราคาทั้งหมด
+                                                input.form-control.border-r-10#totalprice(type='text', name='totalprice' value=(roombyid.status === 'Busy' ? person.totalprice : ''), readonly)
+
+                                    .form-group.col-12
+                                        button.ckin.btn.btn-block(class=(roombyid.status === 'Busy' ? 'btn-warning' : 'btn-primary'), type='submit', style="height: 50px")= roombyid.status === 'Busy' ? 'Check Out' : 'Check In'
+                - if(roombyid.status == 'Busy') 
+                    aside.sidebar.trans-2
+                        .container(style='margin-top: 5%')
+                            .row.flex-c-m.t-center
+                                .col-12
+                                    .txtth3 คุณต้องการเช็คเอาท์ ?
+                                    .txtth3= 'คุณ ' + person.book_name
+                            .row.flex-c-m(style='margin-top: 10px')
+                                .col-3
+                                    form(action=('/backendx/' + roombyid.room_category + '/' + roombyid._id + '/xchkout'), method='post')
+                                        button.btn.btn-danger.btn-block(type='submit') Yes
+                                .col-3
+                                    a.text-decor-none.trans-1.btn-hide-sidebar
+                                        button.btn.btn-warning.btn-block No
+                .row    
+                    .col-12
+                        .flex-c-m(style="float: right")
+                            a.text-decor-none(href='/backendx/' + room_category)
+                                button.btn.btn-dark(style="width: 200px ; height: 40px") กลับ
+
+
+

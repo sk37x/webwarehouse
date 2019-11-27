@@ -1,0 +1,33 @@
+{
+  "name": "webhotel",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.18.3",
+    "chart.js": "^2.7.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.3",
+    "cookie-parser": "^1.4.4",
+    "debug": "^4.1.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "gridfs-stream": "^1.1.1",
+    "http-errors": "^1.7.2",
+    "js-alert": "^1.0.4",
+    "jsonwebtoken": "^8.5.0",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.4.14",
+    "morgan": "~1.9.0",
+    "multer": "^1.4.1",
+    "multer-gridfs-storage": "^3.2.3",
+    "npm": "^6.10.3",
+    "paginationjs": "^2.1.4",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "pdfkit": "^0.10.0",
+    "pug": "^2.0.3"
+  }
+}
