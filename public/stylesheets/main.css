@@ -282,6 +282,14 @@ body {
     text-align: center;
 }
 
+.t-left {
+    text-align: left;
+}
+
+.t-right {
+    text-align: right;
+}
+
 .m-all-10 {
     margin: 10px;
 }

@@ -1,0 +1,88 @@
+//- product
+.app.thNews
+    - var addComma = function(str) {
+    -   str = String(str);
+    -   let newVal = '';
+    -   let t = str.split('.')
+    -   newVal += t[0].length > 0 ? t[0] : '0';
+    -   let regxr = /^(\d+)(\d{3})/g;
+    -   while(regxr.test(newVal)){
+    -       newVal = newVal.replace(regxr, '$1,$2');
+    -   }
+    -   newVal += t.length > 1 ? '.' + t[1] : '.00';
+    -   return newVal;
+    - }
+    form#insProduct(name='formProduct')
+        .modal-header(style='background-color:var(--blue);')
+            h5#exampleModalLabel.modal-title(style='color:white;')= title
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+                span(aria-hidden='true') x
+        .modal-body
+            fieldset(disabled=(userRole.toLowerCase() === 'admin' ? false : true))
+                .form-row
+                    .form-group.col-6     
+                        label รหัสสินค้า 
+                            font(style='color:red') &nbsp;*
+                        input.f14pt.form-control(value=(productDetail !== null ? productDetail.product_code : ''), type='text', name='product_code', onChange="this.value.length > 0 ? $(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") : '';", placeholder='เว้นว่างไว้เพิ่อสร้างโดยอัตโนมัติ')    
+                        span.error-block(data-from='product_code') กรุณาระบุข้อมูล
+                    .form-group.col-6     
+                        label ชื่อวัสดุ/ครุภัณฑ์ 
+                            font(style='color:red') &nbsp;*
+                        input.f14pt.form-control(value=(productDetail !== null ? productDetail.product_name : ''), type='text', name='product_name', aria-describedby="name-error", onChange="this.value.length > 0 ? $(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") : '';")    
+                        span.error-block(data-from='product_name') กรุณาระบุข้อมูล
+                .form-row
+                    .form-group.col-12
+                        label รายละเอียดวัสดุ
+                        textarea.f14pt.form-control(name="product_detail", cols="30", rows="2")=(productDetail ? productDetail.product_detail : '')
+                .form-row
+                    //- .form-group.col-6     
+                    //-     label รุ่น
+                    //-     input.f14pt.form-control(value=(productDetail !== null ? productDetail.product_model : ''), type='text', name='product_model')    
+
+                    .form-group.col-4     
+                        label หมวดหมู่สินค้า 
+                        select.f14pt.form-control(name='product_category', style='height:42px;', onChange="this.value.length > 0 ? $(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") : '';")
+                            option(value='') เลือกรายการ
+                            each value, index in productCategory
+                                option(value=value._id)&attributes({'selected': productDetail !== null ? (value._id.toString() === productDetail.product_category.toString() ? 'true': false) : false})= value.item_description
+                        span.error-block(data-from='product_category') กรุณาระบุข้อมูล
+                    .form-group.col-4     
+                        label หน่วยนับ
+                        select.f14pt.form-control(name='product_unitCount', style='height:42px;', onChange="this.value.length > 0 ? $(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") : '';")
+                            option(value='') เลือกรายการ
+                            - var unitC = ['นิ้ว', 'ถุง', 'เล่ม', 'ขวด', 'กระป๋อง', 'กล่อง', 'คาร์ตัน', 'ถ้วย', 'หีบ', 'ถัง', 'โหล', 'ชิ้น', 'แฟ้ม', 'ออนซ์หน่วยวัดของเหลว US', 'ฟุต', 'ตารางฟุต', 'กรัม', 'ออนซ์', 'คู่', 'แพค/ห่อ', 'งวด', 'รีม', 'Roll', 'ผืน', 'แผ่น', 'ชุด', 'ท่อน', 'ตัน', 'กิโลกรัม', 'ลิตร', 'เมตร', 'โมลต่อลิตร', 'ตารางเมตร', 'เครื่อง', 'มัด', 'มิลลิกรัม', 'มิลลิลิตร', 'มิลลิเมตร', 'ท่อ', 'แท่ง', 'ขด', 'โคม', 'คิว', 'ปี๊บ', 'ซอง', 'ดวง', 'ดอก', 'แผง', 'ตลับ', 'เที่ยว', 'ตัว', 'นัด', 'แท่น', 'บาน', 'ใบ', 'ภาพ/รูป', 'เรือน', 'ล้อ', 'ลัง', 'วง', 'เส้น', 'ลูก', 'หลอด', 'หลัง', 'เม็ด', 'กรง', 'กรอบ', 'กระถาง', 'กระบอก', 'ก้อน', 'หน่วย', ]
+                            each value, index in unitC
+                                option(value= index, selected=(productDetail !== null ? (productDetail.product_unitCount.toString() === index.toString() ? 'true' : false) : false))= value
+                        span.error-block(data-from='product_unitCount') กรุณาระบุข้อมูล
+                    .form-group.col-4     
+                        label วันทำรายการ
+                        input#dateStart.form-control(type='text', name='dateStart_show', data-date=(productDetail ? productDetail.product_startDate : false) autocomplete="off", readonly)
+                        input.form-control(type='hidden', name='dateStarted', autocomplete="off")
+                .form-row
+                    .form-group.col-6
+                        label ราคาต่อหน่วย
+                        input.f14pt.form-control(type='text', name='product_price', value=(productDetail !== null ? (addComma(productDetail.product_price)) : ''), onKeypress='validNumber(event, this);', onChange='this.value = addComma(this.value);', autocomplete="off", readonly=(productDetail ? true : false))    
+                    //- .form-group.col-6
+                    //-     label ค่าปรับ
+                    //-     input.f14pt.form-control(type='number', name='product_fines', value=(productDetail !== null ? (productDetail.product_fines) : ''))    
+                    .form-group.col-6     
+                        label จำนวนวัสดุ
+                        input.f14pt.form-control(type='text', name='product_quantity', value=(productDetail !== null ? (productDetail.product_quantity) : ''), onKeypress='validNumber(event);', autocomplete="off", readonly=(productDetail ? true : false))    
+
+                        
+                .form-row
+                    .form-group.col-4
+                        label(style='margin-right: 7px;') อัพโหลดรูปภาพ
+                        input(type='file', name='fileUpload', onChange='renderImage("#preview", formProduct.fileUpload);')
+                        .block-img.mt-15
+                            img#preview(src=(productDetail ? productDetail.imageEncode : ''), height=(productDetail ? (productDetail.imageEncode ? '150' : false) : false), width=(productDetail ? (productDetail.imageEncode ? '150' : false) : false))
+                .form-row
+                    .form-group.col-6 
+                        input.mr-7(type='checkbox', name='product_status', checked=(productDetail ? productDetail.status : ''))
+                        label สถานะ
+            .modal-footer
+                button.btn.btn-secondary(type='button', data-dismiss='modal') ปิด
+                - if(userRole.toLowerCase() === 'admin')
+                    button.btn.btn-primary(type='button', class=classBtn, data-action=action, data-typed=typed, data-editbyid=editById)= btnText
+    block script 
+        script(src='/javascripts/forModal.js')

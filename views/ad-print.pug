@@ -1,0 +1,118 @@
+doctype html
+html(lang="th")
+    head
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        //- meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+        title Print
+        link(rel='stylesheet', type='text/css' href='/stylesheets/font-face.css')
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet")
+        style 
+            include ../public/stylesheets/print.css
+    
+    body(onLoad="self.print();self.close();").thNews
+        - var monthArr = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
+        - var unitC = ['นิ้ว', 'ถุง', 'เล่ม', 'ขวด', 'กระป๋อง', 'กล่อง', 'คาร์ตัน', 'ถ้วย', 'หีบ', 'ถัง', 'โหล', 'ชิ้น', 'แฟ้ม', 'ออนซ์หน่วยวัดของเหลว US', 'ฟุต', 'ตารางฟุต', 'กรัม', 'ออนซ์', 'คู่', 'แพค/ห่อ', 'งวด', 'รีม', 'Roll', 'ผืน', 'แผ่น', 'ชุด', 'ท่อน', 'ตัน', 'กิโลกรัม', 'ลิตร', 'เมตร', 'โมลต่อลิตร', 'ตารางเมตร', 'เครื่อง', 'มัด', 'มิลลิกรัม', 'มิลลิลิตร', 'มิลลิเมตร', 'ท่อ', 'แท่ง', 'ขด', 'โคม', 'คิว', 'ปี๊บ', 'ซอง', 'ดวง', 'ดอก', 'แผง', 'ตลับ', 'เที่ยว', 'ตัว', 'นัด', 'แท่น', 'บาน', 'ใบ', 'ภาพ/รูป', 'เรือน', 'ล้อ', 'ลัง', 'วง', 'เส้น', 'ลูก', 'หลอด', 'หลัง', 'เม็ด', 'กรง', 'กรอบ', 'กระถาง', 'กระบอก', 'ก้อน', 'หน่วย', ]
+        - var addComma = function(str) {
+        -   str = String(str);
+        -   let newVal = '';
+        -   let t = str.split('.')
+        -   newVal += t[0].length > 0 ? t[0] : '0';
+        -   let regxr = /^(\d+)(\d{3})/g;
+        -   while(regxr.test(newVal)){
+        -       newVal = newVal.replace(regxr, '$1,$2');
+        -   }
+        -   newVal += t.length > 1 ? '.' + t[1] : '.00';
+        -   return newVal;
+        - }
+
+        //- const removeComma = (str) => {
+        //-   str = String(str);
+        //-   while(str.indexOf(',') > 0){
+        //-       str = str.replace(',','');
+        //-   }
+        //-   return str;
+        //- }
+        .container(style='margin-top:25px;')
+            .row
+                .col-12
+                    h1.text-center ใบเบิกวัสดุ - อุปกรณ์
+            .row
+                .col-12
+                    table(width='100%')
+                        tr
+                            td(width='16%')
+                                h3 เลขที่ใบเบิก :
+                            td(width='40%')
+                                div(style='border-bottom:1px dotted black;width:50%')= orderMain.order_no
+                                    
+                            td(width='16%')
+                                h3 วันที่เบิก :
+                            td
+                                div(style='border-bottom:1px dotted black;width:50%')= orderMain.order_date.getDate() + ' ' + monthArr[orderMain.order_date.getMonth()] + ' ' + (orderMain.order_date.getFullYear() + 543)
+
+                        tr
+                            td
+                                h3 ชื่อผู้เบิก :
+                            td
+                                div(style='border-bottom:1px dotted black;width:50%')= orderMain.order_by.firstname + ' ' + orderMain.order_by.lastname
+
+                            td
+                                h3 สถานะ :
+                            td
+                                - var textTh = ''
+                                case orderMain.order_status.toLowerCase()
+                                    when 'pending'
+                                        textTh รอการตรวจสอบ
+                                        - break
+                                    when 'approve'
+                                        textTh อนุมัติ
+                                        - break
+                                    when 'pending'
+                                        textTh ไม่อนุมัติ
+                                        - break
+                                div(style='border-bottom:1px dotted black;width:50%')= textTh
+
+            .row(style='margin-top:30px;')
+                .col-12
+                    table.layout-c(border='1', width='100%')
+                        thead
+                            tr
+                                th.text-center ลำดับ
+                                th.text-center รหัส
+                                th.text-center หมวดหมู่
+                                th.text-center ชื่อวัสดุ
+                                th.text-center ราคา/หน่วย
+                                th.text-center หน่วยนับ
+                                th.text-center จำนวนจ่าย
+                                th.text-center มูลค่า/รวม
+                        tbody
+                            - if(orderDetail) 
+                                - var sum = 0;
+                                each val, i in orderDetail
+                                    tr
+                                        td.text-center= i + 1
+                                        td= val.product_id.product_code
+                                        td= val.product_id.product_category.item_description
+                                        td= val.product_id.product_name
+                                        td.text-right= addComma(val.product_id.product_price)
+                                        td= unitC[val.product_id.product_unitCount]
+                                        td.text-center= val.item_quantity
+                                        td.text-right= addComma(val.item_price)
+                                        - sum += parseFloat(val.item_price)
+                                tr
+                                    td(colspan='7')
+                                        span.float-right รวม 
+                                    td.text-right= addComma(sum)
+            .row(style='margin-top:60px;')
+                .col-6
+                    .signature.text-center
+                        span(style='margin-left:-28px;') ลงชื่อ
+                        span ......................................................................
+                        p(style='margin-bottom:0px !important;') (.........................................................................) 
+                        p ผู้เบิก
+                .col-6
+                    .signature.text-center
+                       span(style='margin-left:-28px;') ลงชื่อ
+                        span ......................................................................
+                        p(style='margin-bottom:0px !important;') (.........................................................................) 
+                        p ผู้อนุมัติ

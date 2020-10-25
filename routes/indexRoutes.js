@@ -8,14 +8,14 @@ var roomCategorys = require('../models/roomcateModel');
 router.get('/', function(req, res, next) {
     roomCategorys.find({}).exec((err, data) => {
 
-        res.render('index', { title: 'Home | Chandrakasem Park', roomCategorys: data });
+        res.redirect('/wspx')
     })
 
 });
 
-router.get('/about', (req, res, next) => {
-    res.render('about', { title: 'About | Chandrakasem Park' })
-});
+// router.get('/about', (req, res, next) => {
+//     res.render('about', { title: 'About | Chandrakasem Park' })
+// });
 
 
 module.exports = router;

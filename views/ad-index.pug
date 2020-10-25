@@ -1,0 +1,153 @@
+extends layoutuser
+
+block content
+    - var monthArr = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
+    - var addComma = function(str) {
+    -   str = String(str);
+    -   let newVal = '';
+    -   let t = str.split('.')
+    -   newVal += t[0].length > 0 ? t[0] : '0';
+    -   let regxr = /^(\d+)(\d{3})/g;
+    -   while(regxr.test(newVal)){
+    -       newVal = newVal.replace(regxr, '$1,$2');
+    -   }
+    -   newVal += t.length > 1 ? '.' + t[1] : '.00';
+    -   return newVal;
+    - }
+    .container-fluid
+        .row.bg-white
+            .col-12.mt-15
+                h3(style='font-family:"TH SarabunNew", tahoma, "sans-serif";') หน้าหลัก
+        .row.mt-15
+            .col-3
+                .flex-c-m.block(style='background-color:#3f72af;height:220px;') 
+                    table.thNews(style='width:89%;color:white;')
+                        tr 
+                            td รายการเบิก
+                        tr
+                            td(width='125')
+                                table.mt-15.thNews(style='width:100%;color:white;')
+                                    tr
+                                        td
+                                            h2=(orderTotal ? orderTotal : '...')
+                                    tr
+                                        td รายการที่มีการเบิก
+                            td.t-center
+                                i.fas.fa-random(style='font-size:80pt')
+            .col-3
+                .flex-c-m.block(style='background-color:#e84545;height:220px;') 
+                    table.thNews(style='width:89%;color:white;')
+                        tr 
+                            td รายการใบเบิกที่ยังไม่ได้รับการอนุมัติ
+                        tr
+                            td(width='125')
+                                table.mt-15.thNews(style='width:100%;color:white;')
+                                    tr
+                                        td
+                                            h2=(orderPendingTotal ? orderPendingTotal : '...')
+                                    tr
+                                        td จำนวนรายการที่ยังไม่ได้คืนวัสดุ
+                            td.t-center
+                                i.fas.fa-bell-slash(style='font-size:80pt')
+
+            .col-3
+                .flex-c-m.block(style='background-color:#f07b3f;height:220px;') 
+                    table.thNews(style='width:89%;color:white;')
+                        tr 
+                            td รายการสมาชิก
+                        tr
+                            td(width='125')
+                                table.mt-15.thNews(style='width:100%;color:white;')
+                                    tr
+                                        td
+                                            h2=(userTotal ? userTotal : '...')
+                                    tr
+                                        td จำนวนสามาชิกที่ใช้งาน
+                            td.t-center
+                                i.fas.fa-address-card(style='font-size:80pt')
+            .col-3
+                .flex-c-m.block(style='background-color:#46cdcf;height:220px;') 
+                    table.thNews(style='width:89%;color:white;')
+                        tr 
+                            td รายการสินค้า
+                        tr
+                            td(width='125')
+                                table.mt-15.thNews(style='width:100%;color:white;')
+                                    tr
+                                        td
+                                            h2=(productTotal ? productTotal : '...')
+                                    tr
+                                        td จำนวนสินค้าทั้งหมด
+                            td.t-center
+                                i.fas.fa-boxes(style='font-size:80pt')
+        .row.mt-15
+            .col-3
+                table.thNews.bg-white(width='100%', style='min-height:400px;font-size:20pt;', border='1')
+                    tr
+                        td(height="35", align='center')
+                            table(width='96%')
+                                tr
+                                    td(width='40')
+                                        i.fas.fa-users(style='margin-top:10px;')
+                                    td ผู้ใช้งานล่าสุด
+                    tr
+                        td(align='center', valign='top')
+                            table(width='96%').mt-15
+                                if (userLast)
+                                    each e, i in userLast
+                                        tr(style='border-bottom:1px solid black')
+                                            td
+                                                div(style='font-size:14pt;padding:12px 0;position:relative')
+                                                    .imageblock
+                                                        img(src=(e.image ? e.image.path.replace('public\\', '../') : '') , style='width:50px;float:left;margin-right:15px;')
+                                                    p(style='margin:0;font-weight:500')=e.userlogin.username
+                                                    p(style='margin:0;font-weight:500')=e.firstname + ' ' +e.lastname
+                                                    p(style='margin:0;position:absolute;top:2px;right:7px;opacity:.8;')=e.lastLogin.getDate() + ' ' + monthArr[e.lastLogin.getMonth()] + ' ' + (e.lastLogin.getFullYear() + 543) + ' เวลา '  + e.lastLogin.getHours() + ':' + e.lastLogin.getMinutes() + 'น.'
+            .col-9
+                table.thNews.bg-white(width='100%', style='min-height:200px;font-size:18pt;', border='1')
+                    tr
+                        td(height="35", align='center')
+                            table(width='96%')
+                                tr
+                                    td(width='40')
+                                        i.fas.fa-boxes(style='margin-top:10px;')
+                                    td รายการเบิกสินค้าที่รอการอนุมัติ
+                    tr(valign='top', align='center')
+                        td
+                            div
+                                table.table.table-bordered.mb-15.mt-15.table-hover(style='width:96% !important;', border='1')
+                                    thead.t-center
+                                        tr
+                                            th เลขที่ใบเบิก
+                                            th ผู้เบิก
+                                            th วันที่ทำการเบิก
+                                            th จำนวนเงิน(บาท)
+                                            th สถานะ
+                                            th การกระทำ
+                                    tbody
+                                        - if(orderPending)
+                                            each val, index in orderPending
+                                                tr
+                                                    td= val.order_no
+                                                    td= val.order_by.firstname + ' ' + val.order_by.lastname
+                                                    td= val.createdDate.getDate() + ' ' + monthArr[val.createdDate.getMonth()] + ' ' + (val.createdDate.getFullYear() + 543)
+                                                    td.text-right= addComma(val.order_totalmoney)
+                                                    td
+                                                        - var setStatus = ''
+                                                        case val.order_status.toString()
+                                                            when 'Pending'
+                                                                span(class='badge badge-warning')= val.order_status
+                                                                - break
+                                                    td 
+                                                        a(class="btn btn-outline-dark btn-sm mr-7 fas fa-edit" href=("/backendx/api/itemwithdraw/modal/"+ val._id) style="width: 100px; height: 32px" data-toggle="modal" data-target="#ajaxLargeModalIndex" data-typed="edit")
+                                                            font.thNews ตรวจสอบ
+                                        - else 
+                                            tr
+                                                td(colspan='6') ไม่มีรายการเบิก
+
+
+    .modal.fade.custom-modal#ajaxLargeModalIndex(role="dialog", tabindex="-1", aria-labelledby="ajaxModalLabelIndex" aria-hidden="true")
+        .modal-dialog.modal-lg(role='document')
+            .modal-content
+block script
+    script(type='text/javascript', src='/javascripts/custom-index.js')

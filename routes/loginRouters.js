@@ -113,6 +113,8 @@ router.post('/', (req, res, next) => {
                 var tkslice = token.slice(19, 27);
                 var timeLog = req.body.timeSelected
                 // // var calDate = new Date(nDate.getTime() + hr1);
+                
+                
                 req.session.userId = user._id;
                 req.session.cookie.path = '/backendx';
                 // req.session.cookie.secure = true;
@@ -120,15 +122,21 @@ router.post('/', (req, res, next) => {
                 req.session.token = token
                 req.session.cookie.expires = new Date(nDate.getTime() + hr2);
                 req.session.tkslicex = tkslice;
+
+
+                console.log(user);
+                console.log(req.session);
+                
                 fs.writeFile('private.Key' + tkslice, req.session.token + ' ' + req.session.pwdencriptx, (err, data) => {
                     if(err) console.log(err);
                     console.log(data);
                     
                 });
                 
-                userDetail.findOneAndUpdate({ 'userlogin': user._id }, { $set: { 'status': 'Online' } }).exec((err, data) => {
+                userDetail.findOneAndUpdate({ 'userlogin': user._id }, { $set: { 'status': 'Online' }, 'lastLogin': new Date() }).populate('userlevel').exec((err, data) => {
                     if (err) console.log(err);
-
+                    req.session.userlevel = data.userlevel.userlevel
+                    req.session.userDetailId = data._id
                     if(req.back){
                         console.log(req.back);
                     }

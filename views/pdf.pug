@@ -1,0 +1,25 @@
+
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/flatly/bootstrap.min.css')
+    //- link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    .row
+        .col-md-8
+            h1="Create a PDF"
+            form.form-horizontal.well(method="post", action="/pdf/p")
+                .form-group
+                    label.col-md-2.control-label File Name
+                    .col-md-10
+                        .input-group
+                        input.form-control(type="text", name="filename", placeholder="File Name")
+                        .input-group-addon=".pdf"
+                .form-group
+                    label.col-md-2.control-label Text
+                    .col-md-10
+                        textarea.form-control(name="content", placeholder="Write some text for on your PDF!")
+                .form-group
+                    .col-sm-offset-2.col-sm-10
+                        input.btn.btn-default(type="submit", value="Create PDF")

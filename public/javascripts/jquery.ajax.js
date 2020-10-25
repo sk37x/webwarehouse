@@ -1,3 +1,4 @@
+var userRole = ''
 $(document).ready(function () {
     var data = {};
     // data.title = "title";
@@ -28,14 +29,31 @@ $(document).ready(function () {
     })
     .done(function (data) {
         x = Object.assign({}, data);
-        $(blockImages).html('<img src="data:image/png;base64,' + data.image.data + '">');
-        $(blockImagesx).html('<img src="data:image/png;base64,' + data.image.data + '">');
-        $(nowUser).html(data.firstname + ' ' + data.userlevel.userlevel);
-        $(nowUserx).html('<div>' + data.firstname + ' ' + data.userlevel.userlevel + '</div><div class="blockx-status">\n<span class="status-online"></span><span class="statusx">' + data.status + '</span></div>');
+        // $(blockImages).html('<img src="data:image/png;base64,' + data.image.data + '">');
+        // $(blockImagesx).html('<img src="data:image/png;base64,' + data.image.data + '">');
+        // $(nowUser).html(data.firstname + ' ' + data.userlevel.userlevel);
+        // $(nowUserx).html('<div>' + data.firstname + ' ' + data.userlevel.userlevel + '</div><div class="blockx-status">\n<span class="status-online"></span><span class="statusx">' + data.status + '</span></div>');
 
 
-
-        console.log(x)
+        // let imgProfile = $('.image-profile');
+        // let usernameShow = $('#username-profile')
+        // let nameShow = $('#name-profile')
+        // $.each(imgProfile, (index, elem) => {
+        //     if(gSubClass) {
+        //         if(x.image) {
+        //             elem.src = x.image.path.replace('public\\', "../../");
+        //         } else {
+        //             elem.src = '../../uploads/anonymous.png'
+        //         }
+        //     } else {
+        //         elem.src = x.image.path.replace('public\\', "../");
+        //     }
+        // })
+        // let pFile = $('#toggleProfile')
+        // pFile.attr('href', gUrl + '/api/users/modal/'+x._id + '/add-profile')
+        // usernameShow.text(x.firstname + ' ' + x.lastname)
+        // nameShow.text(x.userlevel.userlevel)
+        userRole = x.userlevel.userlevel;
         if(x.userlevel.userlevel != ManageUserId){
             $(ManageUser).hide();
         }

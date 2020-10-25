@@ -51,21 +51,21 @@ var rN1 = 0,
 var o = 0;
 var aArr = [];
 var tYear = new Date();
-console.log(tYear.getFullYear());
+// console.log(tYear.getFullYear());
 $.each(roomDescription, function (i, val) {
     var roomDesVal = this.value;
-    console.log(roomDesVal)
+    // console.log(roomDesVal)
     var a = 0;
     for (x = 0; x < bookDes.length; x++) {
         var bDes = bookDes[x];
 
-        console.log(x)
+        // console.log(x)
         if (roomDesVal == bDes.value) {
             var bDesY = bDes.getAttribute('y');
             if(bDesY == tYear.getFullYear()){
 
                 a++;
-                console.log(bDes)
+                // console.log(bDes)
             }
 
         }
@@ -81,7 +81,7 @@ $.each(roomDescription, function (i, val) {
         o + 1;
     }
 })
-console.log(aArr)
+// console.log(aArr)
 // $.each(roomDescription, function (i, val) {
 //     roomDesVal = this.value;
 //     roomDes.push(roomDesVal);
@@ -156,7 +156,7 @@ $.each(bfRes, function (i, val) {
             rStaff++;
         }
 
-        console.log(tsVal);
+        // console.log(tsVal);
     } else if (bfClass == rCate[1]) {
         res2++;
         var tsVal = $(this).val();
@@ -229,11 +229,11 @@ $(yChkin).each(function (key, val) {
         if ($(this).hasClass(c)) {
             // calR[c] = {[c]:[val.value]}
             calR[2].push(parseInt($(this).val()))
-            console.log('Hello World')
+            // console.log('Hello World')
         } else if ($(this).hasClass(b)) {
             calR[1].push(parseInt($(this).val()))
-            console.log($(this).val())
-            console.log('Hello World, Hello SKETX')
+            // console.log($(this).val())
+            // console.log('Hello World, Hello SKETX')
         } else {
             calR[0].push(parseInt($(this).val()))
         }
@@ -258,11 +258,11 @@ $(yChkin).each(function (key, val) {
         if ($(this).hasClass(c)) {
             // calR[c] = {[c]:[val.value]}
             calO[2].push(parseInt($(this).val()))
-            console.log('Hello World')
+            // console.log('Hello World')
         } else if ($(this).hasClass(b)) {
             calO[1].push(parseInt($(this).val()))
-            console.log($(this).val())
-            console.log('Hello World, Hello SKETX')
+            // console.log($(this).val())
+            // console.log('Hello World, Hello SKETX')
         } else {
             calO[0].push(parseInt($(this).val()))
         }
@@ -270,8 +270,8 @@ $(yChkin).each(function (key, val) {
 
 
 })
-console.log(calR)
-console.log(calO)
+// console.log(calR)
+// console.log(calO)
 // console.log(monthInOldYear)
 
 // for (var l = 0; l < month.length; l++) {
@@ -319,12 +319,12 @@ if (t < f) {
     // Cal Max Month
     for (i = 0; i < month.length; i++) {
         a = monthInOldYear;
-        console.log(a[i]);
+        // console.log(a[i]);
         if (i === 0) minMonth = monthInOldYear[i];
         if (minMonth < a[i]) minMonth = monthInOldYear[i];
 
     }
-    console.log(minMonth);
+    // console.log(minMonth);
 } else {
 
     useYear = dateNow.getFullYear();
@@ -524,7 +524,7 @@ if (t < f) {
 }
 // var monthStart = month[minMonth - 1];
 // console.log(monthStart)
-console.log(month)
+// console.log(month)
 
 
 // ตัดเดือน

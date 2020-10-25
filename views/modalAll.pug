@@ -1,0 +1,236 @@
+if modalType === 'users'
+    .app.thNews
+        form#test-form.needs-validation(name='form', novalidate, enctype="multipart/form-data")
+            .modal-header(style='background-color:var(--blue);')
+                h5#exampleModalLabel.modal-title(style='color:white;')= title
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') x
+            .modal-body
+                .form-group.col-12
+                    label(for='username') ชื่อผู้ใช้งาน
+                        font(color='red') &nbsp;*
+                    input.form-control(value=(data !== null ? data.userlogin.username:''), disabled=(data !== null ? data.userlogin.username !== null ? true: false :false), type='text', name='username', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                    span.error-block.invalid-feedback(data-from='username') กรุณากรอกข้อมูล
+                    
+                if eventText === 'edit'
+                    - if(nowSession === 'user')
+                        .form-group.col-12
+                            label รหัสผ่านเดิม
+                                font(color='red') &nbsp;*
+                            input.form-control(value='', type='password', name='oldPassword', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                            span.error-block.invalid-feedback(data-from='oldPassword') กรุณากรอกข้อมูล
+                        .form-group.col-12
+                            label รหัสผ่าน &nbsp; 
+                                font(color='red')= (data !== null ? '': '*' )
+                            input.form-control(value='', type='password', name='password', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                            span.error-block.invalid-feedback(data-from='password') กรุณากรอกข้อมูล
+                        .form-group.col-12
+                            label ยืนยันรหัสผ่าน &nbsp; 
+                                font(color='red')= (data !== null ? '': '*' )
+                            input.form-control(value='', type='password', name='passwordConf', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                            span.error-block.invalid-feedback(data-from='passwordConf') กรุณากรอกข้อมูล
+                    //- 
+                        .form-group.col-12
+                            label รหัสผ่านเดิม
+                                font(color='red') &nbsp;*
+                            input.form-control(value='', type='password', name='oldPassword', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                            span.error-block.invalid-feedback(data-from='oldPassword') กรุณากรอกข้อมูล
+                if eventText === 'add'
+                    .form-group.col-12
+                        label รหัสผ่าน &nbsp; 
+                            font(color='red')= (data !== null ? '': '*' )
+                        input.form-control(value='', type='password', name='password', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                        span.error-block.invalid-feedback(data-from='password') กรุณากรอกข้อมูล
+                    .form-group.col-12
+                        label ยืนยันรหัสผ่าน &nbsp; 
+                            font(color='red')= (data !== null ? '': '*' )
+                        input.form-control(value='', type='password', name='passwordConf', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                        span.error-block.invalid-feedback(data-from='passwordConf') กรุณากรอกข้อมูล
+                .form-row.mb-15(style='margin-left:10px !important;margin-right: 10px !important;')
+                    .col-6
+                        label ชื่่อ
+                            font(color='red') &nbsp;*
+                        input.form-control(value=(data !== null ? data.firstname:''), type='text', name='firstname', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                        span.error-block.invalid-feedback(data-from='firstname') กรุณากรอกข้อมูล
+                    .col-6
+                        label นามสกุล
+                            font(color='red') &nbsp;*
+                        input.form-control(value=(data !== null ? data.lastname:''), type='text', name='lastname', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                        span.error-block.invalid-feedback(data-from='lastname') กรุณากรอกข้อมูล
+                .form-row.mb-15(style='margin-left:10px !important;margin-right: 10px !important;')
+                    .col-6
+                        label อีเมล
+                        input.form-control(value=(data !== null ? (data.userlogin !== null ? data.userlogin.email : '') : ''), type='email', name='email', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                        span.error-block(data-from='email') กรุณากรอกข้อมูล
+                    .col-6
+                        label เบอร์โทรศัพท์
+                        input.form-control(value=(data !== null ? data.phoneTel:''), maxlength='10', type='text', name='phoneTel', onKeyup="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                        span.error-block(data-from='phoneTel') กรุณากรอกข้อมูล
+                .form-row.mb-15(style='margin-left:10px !important;margin-right: 10px !important;')
+
+
+
+                    - if(nowSession === 'admin')
+                        .col-6
+                            label ระดับผู้ใช้งาน
+                                font(color='red') &nbsp;*
+                            select.form-control(name='userlevel', style='font-size:14pt !important;', onChange="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                                option(value='') เลือกระดับผู้ใช้
+                                each value, index in userLv
+                                    option(value=value._id, selected=(data !== null ? (data.userlevel._id.toString() === value._id.toString() ? 'true' : false) : false))= value.userlevel
+                            span.invalid-feedback.error-block(data-from='userlevel') กรุณากรอกข้อมูล
+                    .col-6
+                        label(style='margin-right: 7px;') อัพโหลดรูปภาพ
+                        br
+                        .image-block
+                            .blockinput(style='margin-top:10px;')
+                                input#inputFileToLoad(type='file', name='fileUpload' )
+                                input#pictureString( type='hidden' )
+                            .blockpicture
+                                img#profile-picture(src=(picture !== null ? 'data:image/png;base64,' + picture : 'data:image/png;base64,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') width='200' height='172')
+                                canvas#canvas
+                //- .form-group.col-12
+                //-     input.mr-7(type='checkbox', name='userStatus' checked=(data !== null ? data.userLevelStatus : '')) 
+                //-     span สถานะ
+            .modal-footer
+                button.btn.btn-secondary(type='button', data-dismiss='modal') ปิด
+                button.btn.btn-primary(type='button', class=classBtn, data-action=eventText, data-editbyid=editById)= btnText
+    script(src='/javascripts/test2.js')
+
+
+
+
+
+
+if modalType === 'itemwithdraw'
+    .app.thNews
+        form#form-order.needs-validation(name='form', novalidate, action='api/itemwithdraw/add', method='post', enctype="multipart/form-data")
+            .modal-header(style='background-color:var(--blue);')
+                h5#exampleModalLabel.modal-title(style='color:white;')
+                    i.far.fa-file-alt.mr-7
+                    span= title
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') x
+            .modal-body
+                .block-content(style='position:relative;')
+                    i.far.fa-address-card.mr-7
+                    span รายละเอียดของ ลูกค้า/คู่ค้า
+                    if data
+                        span(style='position:absolute;right:0px;')
+                            span.mr-7 สถานะ : 
+                            case data.order_status.toLowerCase()
+                                when 'pending'
+                                    span.badge.badge-warning.mr-7(style='font-size:16pt;') รอการตรวจสอบ
+                                    - break
+                                when 'approve'
+                                    span.badge.badge-success.mr-7(style='font-size:16pt;') อนุมัติ
+                                    - break
+                                when 'pending'
+                                    span.badge.badge-danger.mr-7(style='font-size:16pt;') ไม่อนุมัติ
+                                    - break
+                            a(href='/backendx/print/'+data._id).thNews.btn.btn-primary.btn-print
+                                i.fas.fa-print 
+                                    font.thNews พิมพ์
+                        //- span(style='float:right;')= data.order_status
+                        //- span(style='float:right;')= perm
+                        //- span(style='float:right;')= rdOnly
+                fieldset(disabled=(data ? data.order_status.toLowerCase() === 'pending' ? !perm ? true : false : true : false))
+                    .form-row
+                        .col-12
+                            label.mb-none ลูกค้า/คู่ค้า
+                    .form-row.mb-30
+                        .col-12
+                            input.form-control(type='text', name='order_by_show', value=(userShowName ? userShowName : ''), data-userid=(data ? data.order_by._id : ''), readonly)
+                            input.form-control(type='hidden'
+                            , name='order_by'
+                            , value=(userId ? userId : '')
+                            , data-userid=(data ? data.order_by._id : ''
+                            
+                            ))
+
+                    .form-row.mb-15
+                        .block-content
+                            i.fa.fa-shopping-cart.mr-7
+                            span รายละเอียดการทำธุรกรรม
+                    .form-row.mb-15
+                        .col-6
+                            label.mb-none เลขที่ใบเบิก
+                            input.form-control#order_no(type='text' name='order_no', placeholder='เว้นว่างไว้เพิ่อสร้างโดยอัตโนมัติ', value=(data ? data.order_no : ''), onKeyup="$(\"[data-from='\" + this.name +\"']\").removeClass(\"error\");$(this).removeClass('is-invalid');")
+                            span.error-block(data-from='order_no') กรุณาเปลี่ยนเลขที่ใบเบิก เนื่องจากมีข้อมูลอยู่แล้ว
+                        .col-6
+                            label.mb-none วันที่ทำรายการ
+                            input.input-date#order-date.form-control(type='text' name='order_date_show', value=(data ? data.order_date.getDate()+'/'+data.order_date.getMonth()+'/'+(data.order_date.getFullYear()+543) : ''), data-date=(data? data.order_date: false), readonly)
+                            input.form-control(type='text' name='order_date', value=(data ? data.order_date : ''), hidden)
+                    .form-row.blockAppend.mb-30
+                        .col-6
+                            label.mb-none รหัสสินค้า
+                            #autocomplete.autocomplete
+                                input#order_code_show.form-control.autocomplete-input(type='text', name='order_code_show', onclick="$('span[data-from=\"order_code_show\"]').removeClass(\"error\")")
+                                ul.autocomplete-result-list
+                                span.error-block(data-from='order_code_show') กรุณาเลือกสินค้าที่ต้องการเพิ่ม
+
+                        .col-4
+                            label.mb-none จำนวน
+                            input.form-control(size="2", type='text' name='order_p_quantity', value='1', onKeyup='if($(this).hasClass("is-invalid")) {$(this).removeClass("is-invalid");$("span.error-block").removeClass("invalid-feedback")};', onkeypress='validNumber(event);')
+                            span.error-block(data-from="order_p_quantity")
+                        .col-2
+                            label.mb-none &nbsp;
+                            button#add-list.btn.btn-block.btn-success เพิ่มรายการเบิก
+                    .form-row
+                        if (dataItem)
+                            each x, i in dataItem
+                                input.dataArr(type='hidden', value=(x))
+                        .col-12.item
+                            table.table-responsive-lg#calculateTable(style='width:100%;border-spacing:0; border-collapse:collapse;background-color:')
+                                thead.t-center
+                                    tr(style='background-color:#ebebeb;')
+                                        th รายละเอียด
+                                        th จำนวน
+                                        th หน่วยละ
+                                        th 
+                                        th(colspan='2') จำนวนเงิน (บาท)
+                                        th
+                                tbody#table_product
+                                tfoot
+                                    tr
+                                        td(colspan='3', rowspan="3") 
+                                            label.mb-none หมายเหตุ
+                                            textarea.form-control(rows="3", name='comment', style='min-width:420px;resize:none;')=(data ? data.comment : '')
+                                        //- td.t-right รวม
+                                        //- td 
+                                        //- td(width='120')
+                                        //- td.t-right(style='width:25px;') บาท
+                                    tr
+                                        td.t-right รวมทั้งสิ้น
+                                        td(colspan='2').t-right 
+                                            input#order-totalmoney.form-control(value=(data ? orderTotalMoney : '')
+                                            , type='text'
+                                            , name='order_totalmoney'
+                                            , style='min-width:3.2rem !important;border:0px;background-color:#fdf59a;text-align:right;color:brown;cursor:context-menu;'
+                                            , readonly)
+                                        td.t-right(style='max-width:40px;') บาท
+            .modal-footer
+                - if(data) 
+                    - if(role.toLowerCase() == 'admin')
+                        - if(data.order_status.toLowerCase() == 'pending')
+                            .mr-auto
+                                button.btn.btn-success.btn-approve.mr-7(type='button', data-orderno=(data ? data.order_no : false), data-orderid=(data ? data._id : false), data-userid=(userId ? userId : false)) อนุมัติ
+                                button.btn.btn-danger.btn-disapprove(type='button', data-orderno=(data ? data.order_no : false), data-orderid=(data ? data._id : false), data-userid=(userId ? userId : false)) ไม่อนุมัติ
+                        - else 
+                            .mr-auto 
+                                span เปลี่ยนแปลงสถานะโดย : 
+                                span=data.order_confirm_by.firstname + ' ' + data.order_confirm_by.lastname
+                    - else 
+                        - if(data.order_status.toLowerCase() !== 'pending')
+                            .mr-auto 
+                                span เปลี่ยนแปลงสถานะโดย : 
+                                span=data.order_confirm_by.firstname + ' ' + data.order_confirm_by.lastname
+                                
+                button.btn.btn-secondary(type='button', data-dismiss='modal') ปิด
+                - if(data)
+                    - if(perm)
+                        -if(data.order_status.toLowerCase() === 'pending')
+                            button.btn.btn-primary(type='button', class=classBtn, data-action=eventText, data-editbyid=(data ? data._id : false))= btnText
+                - else 
+                    button.btn.btn-primary(type='button', class=classBtn, data-action=eventText, data-editbyid=(data ? data._id : false))= btnText
+            script(src='/javascripts/itemwithdraw.js')

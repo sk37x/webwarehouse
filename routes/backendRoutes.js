@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var path = require('path')
+var pug = require('pug')
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var allRoom = require("../models/allroombackModel");
@@ -12,12 +14,20 @@ var bookFrom = require('../models/bookfromModel');
 var userLevel = require('../models/userlevelModel');
 var userPosition = require('../models/userPositionModel');
 var userDetail = require('../models/userDetailModel');
+var itemCategorys = require('../models/itemCategorysModel')
+const fsfilesaves = require('../models/fsFileSave.js')
+var product = require('../models/productsModel')
+const orderMain = require('../models/orderMainModel')
+const orderDetail = require('../models/orderDetailModel')
 var jwt = require('jsonwebtoken');
 var GridFsStorage = require('multer-gridfs-storage');
 var multer = require('multer');
 var fschunks = require('../models/fs.pictureModel')[1];
 var fs = require('fs');
 var _ = require('lodash');
+const autogencode = require('../models/autogencodeModel');
+
+
 // GridFsStorage
 let storage = new GridFsStorage({
     url: 'mongodb://localhost/cruhotelx',
@@ -176,7 +186,7 @@ router.post('/api/user/nowUser', (req, res, next) => {
 router.use('/', (req, res, next) => {
     // console.log(res.getHeaders());
     // console.log(req.key);
-    console.log(req.session.userId)
+    // console.log(req.session.userId)
     req.session.cookie.secure = true;
 
     var token = res.getHeader('authorization');
@@ -263,77 +273,78 @@ router.use('/', (req, res, next) => {
 // })
 
 
+router.post('/print/:_id', async(req, res, next) => {
+    let orderMains = await orderMain.findOne({'_id': req.params._id}).populate('order_by');
+    let orderDetails = await orderDetail.find({'order_id': orderMains._id}).populate({path:'product_id', populate: {path:'product_category'}});
+    let pathComplie = path.join(__dirname, '../views/ad-print.pug');
+    var html = await pug.renderFile(pathComplie, {byOrder: req.params._id, orderMain: orderMains, orderDetail: orderDetails})
+    // res.render('ad-print', {byOrder: req.params._id, orderMain: orderMains, orderDetail: orderDetails})
+    res.status(200).json({html:html})
+    
+})
 
 
 
-router.get('/', (req, res, next) => {
 
-    next();
-}), router.get('/', (req, res, next) => {
-
-
-    roomCategory.find({}).exec((err, data) => {
-        if (err) console.log(err);
-        // console.log(data);
-        res.render('ad-roommanage', { roomCate: data });
-    }), router.get('/:room_category', (req, res, next) => {
-        allRoom.find({ room_category: req.params.room_category }, (err, data) => {
-            if (err) console.log(err);
-            // console.log(req.params.room_category);
-            // console.log(req.myTimeLogger);
-            res.render('ad-roommanage', { allroom: data, roomname: req.params.room_category });
-        })
-    }), router.get('/:room_category/:_id', (req, res, next) => {
-        allRoom.findById(req.params._id, (err, data) => {
-            if (err) console.log(err);
-            console.log(data.room_num);
-            if (data.status === 'Busy') {
-                Booking.findOne({ book_roomNo: data.room_num, $and: [{ book_roomname: data.room_type }] }, (err, bookperson) => {
-                    if (err) console.log(err);
-                    console.log(bookperson);
-                    res.render('ad-roommanage', { person: bookperson, roombyid: data, room_category: req.params.room_category });
-                })
-            } else {
-                res.render('ad-roommanage', { roombyid: data, room_category: req.params.room_category });
-            }
-
-        }), router.post('/:room_category/:_id/xchkin', (req, res, next) => {
-            allRoom.findByIdAndUpdate(req.params._id, { $set: { status: 'Busy' } }, (err, data) => {
-                if (err) console.log(err);
-                // console.log(data);
-                var doc = new Booking(req.body);
-                doc.save((err, data) => {
-                    if (err) console.log(err);
-                    // console.log(data);
-                })
-                res.redirect('/backendx/booking/allbook/all-list');
-            })
-        }), router.post('/:room_category/:_id/xchkout', (req, res, next) => {
-            // allRoom.findByIdAndUpdate(req.params._id, { $set: { status: 'Available' } }, (err, data) => {
-            allRoom.findByIdAndUpdate(req.params._id, { $set: { status: 'Available' } }, (err, data) => {
-                console.log('Data 1 | ' + data);
-                Booking.findOneAndUpdate({ book_req_status: 'check-in', book_roomNo: data.No }, { $set: { book_req_status: 'check-out' } }, (err, personchkout) => {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    console.log('personal | ' + personchkout);
-                    console.log('Date | ' + data.dateCreate.getDate());
-                    console.log('Date | ' + personchkout.book_createDate.getDate());
-
-                    res.redirect('/backendx/booking/allbook/check-out');
-
-                })
-            })
-        })
-        // res.json(req.body);
+router.get('/', async(req, res, next) => {
+    let autogen = (await autogencode.findOne({'_id': '5f71930d3636cf7446ed4179'})).toJSON();
+    // console.log(autogen)
+    autogen.codeArray.map((e, i) => {
+        if(e.type == 'gen_ProductCode') {
+            // console.log(e);
+        }
     })
+    // const history = Array.from(...autogen.codeArray).map(v => v.toJSON())
+    // console.log(history)
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    let orderTotal = await orderMain.find({});
+    let orderPendingTotal = await orderMain.find({'order_status' : 'Pending'}).populate('order_by');
+    // console.log(orderPendingTotal[0].populate('order_by.userlogin'));
+    let userTotal = await userDetail.find({});
+    let productTotal = await product.find({});
+    let counting = {orderTotal :orderTotal.length, orderPendingTotal:orderPendingTotal.length, userTotal:userTotal.length, productTotal:productTotal.length};
+    let userLastLogin = await userDetail.find({'lastLogin' : {$ne : null}}).populate('userlogin').populate('image').sort({lastLogin: -1}).limit(4);
+    req.session.userlevel.toLowerCase() === 'admin' ?
+    res.render('ad-index', { title: "Home", ...counting, userLast: userLastLogin, orderPending : orderPendingTotal, userlv:req.session.userlevel, userData: userData}) :
+    res.redirect('backendx/product');
+})
 
-});
+// CATEGORY ###################
+router.get('/category/', async(req, res, next) => {
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    itemCategorys.find({}, async(err, data) => {
+        // for(let i = 0; i < data.length; i++) {
+        //     let join = await product.find({'product_category': data[i]._id});
+        //     if(join.length > 0) {
+        //         data[i].used = 1
+        //     } else {
+        //         data[i].used = 0
+        //     }
+        // }
+        res.render('ad-category', {title:'category', cateType: 'test', itemList: data, userlv:req.session.userlevel, userData: userData})
+    })
+})
+
+const allItem = async(query, fields) => {
+    let list = await itemCategorys.find(query, fields);
+    return list;
+}
+
+const allProducts = async() => {
+    let list = await product.find({});
+    return list;
+}
+// Product ###################
+router.get('/product/', async(req, res, next) => {
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    let listCategory = await allItem({"item_status": 1});
+    let listProduct = await allProducts();
+    res.render('ad-product', {title:'product', cateType: 'test', category: listCategory, allProduct:listProduct, userlv:req.session.userlevel, userData: userData})
+})
 
 
 
-
+/*
 router.get('/manageroom/', (req, res, next) => {
     next();
 }), router.get('/manageroom/manage-rooms', (req, res, next) => {
@@ -592,7 +603,6 @@ router.get('/booking', (req, res, next) => {
 
 });
 
-
 // Report Page
 var dataP = []
 router.get('/report', (req, res, next) => {
@@ -683,11 +693,52 @@ router.get('/report', (req, res, next) => {
         })
     })
 })
+*/
 
 
-router.get('/user', (req, res, next) => {
+router.get('/users', async(req, res, next) => {
+    // let sysAdmin = await userLevel.findOne({'userlevel': 'system-admin'})
+    // userDetail.find({'userlevel': {$ne : sysAdmin._id.toString()}}, (err, data) => { console.log(data) }).populate('userlogin').populate({path:'userlevel', match:{'userlevel': {$ne : 'system-admin'}}, select: 'userlevel -_id'}).populate('userposition').exec((err, userManagex) => {
+    //     if (err) console.log(err);
+        // console.log(userManagex);
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    res.render('ad-user', { title:'users', userlv:req.session.userlevel, userData: userData });
+    // })
+})
+router.get('/itemwithdraw', async(req, res, next) => {
+    // let sysAdmin = await userLevel.findOne({'userlevel': 'system-admin'})
+    // userDetail.find({'userlevel': {$ne : sysAdmin._id.toString()}}, (err, data) => { console.log(data) }).populate('userlogin').populate({path:'userlevel', match:{'userlevel': {$ne : 'system-admin'}}, select: 'userlevel -_id'}).populate('userposition').exec((err, userManagex) => {
+    //     if (err) console.log(err);
+        // console.log(userManagex);
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    res.render('ad-withdraw', { title:'itemwithdraw', userlv:req.session.userlevel, userData:userData });
+    // })
+})
+
+router.get('/reportx', async(req, res, next) => {
+}), router.get('/reportx/itemwithdraw', async(req, res, next) => {
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    console.log(req.url)
+    res.render('ad-reportwithdraw', {title : 'reportwithdraw', userlv:req.session.userlevel, userData: userData})
+}), router.get('/reportx/product', async(req, res, next) => {
+    let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
+    let category = await itemCategorys.find({}, '_id item_description');
+    res.render('ad-reportproduct', {title : 'reportproduct', userlv:req.session.userlevel, userData: userData, productCategory: category})
+})
+
+
+
+router.get('/user(/:config)?', async(req, res, next) => {
+    // var data = [];
+    // var titleText = "";
+    // if(req.params.config === 'level') {
+    //     data = await userLevel.find({});
+    //     titleText = "จัดการระดับสมาชิก"
+    // }
+    // res.render('ad-user', {title: 'userManage', titleText:titleText, configUser: req.params.config})
     next();
-}), router.get('/user/level', (req, res, next) => {
+})
+, router.get('/user/level', (req, res, next) => {
     userLevel.find().exec((err, userlvl) => {
         if (err) {
             console.log(err);
@@ -779,8 +830,9 @@ router.get('/user', (req, res, next) => {
         res.redirect('/backendx/user/posision');
     })
 
-}), router.get('/user/manage', (req, res, next) => {
-    userDetail.find().populate('userlogin').populate('userlevel').populate('userposition').exec((err, userManagex) => {
+}), router.get('/user/manage', async(req, res, next) => {
+    let sysAdmin = await userLevel.findOne({'userlevel': 'system-admin'})
+    userDetail.find({'userlevel': {$ne : sysAdmin._id.toString()}}, (err, data) => { console.log(data) }).populate('userlogin').populate({path:'userlevel', match:{'userlevel': {$ne : 'system-admin'}}, select: 'userlevel -_id'}).populate('userposition').exec((err, userManagex) => {
         if (err) console.log(err);
         // console.log(userManagex);
         res.render('ad-usersx', { userManage: userManagex });
@@ -794,7 +846,7 @@ router.get('/user', (req, res, next) => {
         })
     }) // INSERT DATA
 }), router.get('/user/manage/refresh', (req, res, next) => {
-    res.redirect('/backendx/user/manage');
+    // res.redirect('/backendx/user/manage');
     // REFRESH
 }), router.post('/user/manage/insert/success', upload, (req, res, next) => {
 
@@ -859,8 +911,8 @@ router.get('/user', (req, res, next) => {
                         console.log(err)
                         return next(err)
                     } else {
-                        fschunks.findOne({ 'files_id': req.file.id }).exec((err, chunksIdx) => {
-                            if (err) console.log(err);
+                        // fschunks.findOne({ 'files_id': req.file.id }).exec((err, chunksIdx) => {
+                            // if (err) console.log(err);
                             var userDetailx = {
                                 firstname: req.body.firstname,
                                 lastname: req.body.lastname,
@@ -869,7 +921,7 @@ router.get('/user', (req, res, next) => {
                                 userlevel: req.body.userlevel,
                                 userposition: req.body.userposition,
                                 userlogin: userLog._id,
-                                image: chunksIdx._id
+                                // image: chunksIdx._id
 
                             }
                             userDetail.create(userDetailx, (err, userDetaill) => {
@@ -882,7 +934,7 @@ router.get('/user', (req, res, next) => {
                                     return res.redirect('/backendx/user/manage');
                                 }
                             })
-                        })
+                        // })
                     }
                 });
             }

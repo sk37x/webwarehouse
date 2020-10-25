@@ -1,3 +1,4 @@
+// ประกาศตัวแปร
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -14,6 +15,7 @@ var jwt = require('jsonwebtoken');
 var app = express();
 var JSalert = require('js-alert');
 
+
 // Connect DB
 var mongoose = require('mongoose');
 mongoose.connect(key.mongoURI, { useNewUrlParser: true });
@@ -22,7 +24,6 @@ var db = mongoose.connection;
 
 
 // Session
-
 app.use(session({
   secret: "Hello Friend, this is a session",
   resave: true,
@@ -41,13 +42,11 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
+// app.use('uploads/', express.static('files'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-
 
 
 // WEB Router
@@ -57,15 +56,26 @@ var room = require('./routes/roomRoutes');
 var managex = require('./routes/backendRoutes');
 var loginx = require('./routes/loginRouters');
 var testPop = require('./routes/testPopRoutes');
+var pdfTest = require('./routes/pdfTestRoutes');
+// app.use('/room', room);
+// app.use('/contact', contact);
 app.use('/', index);
-app.use('/room', room);
-app.use('/contact', contact);
 app.use('/wspx', loginx);
 app.use('/backendx', loginx.reqHeader, managex);
 app.use('/testpop', testPop);
+app.use('/pdf', pdfTest);
 
-var api = require("./routes/api/users");
-app.use("/api", api);
+var api = require("./routes/api/category");
+var apiProduct = require("./routes/api/product");
+var apiUser = require("./routes/api/apiUser");
+var apiOrder = require("./routes/api/apiOrder");
+var apiReport = require("./routes/api/apiReport");
+app.use("/backendx/api", api);
+app.use("/backendx/api/product", apiProduct);
+app.use("/backendx/api/users", apiUser);
+app.use("/backendx/api/itemwithdraw", apiOrder);
+app.use("/backendx/api/reportx", apiReport);
+
 
 // verifyFunction
 function verifyToken(req, res, next) {
@@ -85,8 +95,6 @@ function verifyToken(req, res, next) {
     res.sendStatus(403);
   }
 }
-
-
 
 
 

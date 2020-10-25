@@ -1,33 +1,541 @@
-$(document).ready(function ($) {
+'use stict'
+$( document ).ready(function() {
+    $(function() {  
+        $(".nicescroll").niceScroll({cursorcolor:"#858586"});
+	});
+});
+
+const callAPI = async(url, itemID = '', action = '') => {
+    return $.ajax({
+        url: url + action + itemID,
+        method: "POST"
+    })
+}
+
+const showSidebar = (elem) => {
+    console.log(elem);
+    $(elem).on('click', (e) => {
+        e.preventDefault();
+        console.log("click")
+    })
+}
+
+$('#ajaxLargeModalProfile, #ajaxLargeModalIndex').on('show.bs.modal', function (e) {
+    console.log(e)
+    var link = $(e.relatedTarget);
+    $(this).find('.modal-content').load(link.attr('href'))
+    // $(this).find('.modal-content').load(link.attr('href'));
+});
+
+$('#ajaxLargeModalProfile, #ajaxLargeModalIndex').on('hidden.bs.modal', function (e) {
+    // e.preventDefault()
+    console.log(e);
+    $('.modal-content').empty();
+    $(this).removeData('bs.modal');
+});
+
+
+$(document).ready( ($) => {
+
     $('body').append('<div class="overlay-sidebar trans-2"></div>');
-    var btnSidebar = $('.btn-show-sidebar');
-    var btnHideSidebar = $('.btn-hide-sidebar');
-    var ovlSidebar = $('.overlay-sidebar');
+    $('.sec-admin-main').css('min-height', (window.innerHeight - 12 )+'px')
+    try {
+        var tableCategory = $('#category').DataTable({
+            ajax: {
+                method: 'GET',
+                url: 'http://localhost:3000/backendx/api/table_category'
+            },
+            'columns': [
+                {
+                    data: 'item_description',
+                    render: (data, type, row) => {
+                        return row['used'] == 1 ? (`
+                        <a>${row['item_description']}</a>
+                    `) : (`
+                    <a class="btn-show-sidebar" href="api/category/${row['_id']}">${row['item_description']}</a>
+                `)
+                    }
+                },
+                {
+                    data: 'item_status',
+                    render: (data, type, row) => {
+                        let statBox = row['item_status']  === 1 ? '<span class="fas fa-check"> </span>' : '<span class="fas fa-times"></span>' ;
+                        return statBox;
+                        // return statBox;
+                    }
+                },
+                {
+                    render: (data, type, row) => {
+                        
+                        return row['used'] == 0 ? (`
+                            <a
+                                class="btn-show-sidebar btn btn-outline-dark btn-sm mr-7 fas fa-edit"
+                                href="api/category/${row['_id']}"
+                                style="width: 85px; height: 32px"
+                            >
+                                <font class="thNews">แก้ไข</font></a>
+                            <a
+                                class="btn btn-outline-danger btn-sm btn-delete-category mr-7 fas fa-trash"
+                                href="api/category/"
+                                data-itemid="${row['_id']}"
+                                data-desc="${row['item_description']}"
+                                data-action="delete"
+                                style="width: 85px; height: 32px"
+                            >
+                            <font class="thNews">ลบ</font></a>
+                    
+                        `) : '';
+                    },
+                    orderable: false
+                },
 
-    var sidebar = $('.sidebar');
-    // del field
-    $(btnSidebar).each(function (i) {
-        $(this).on('click', () => {
-            $(sidebar).eq(i).addClass('show-sidebar')
-            $(ovlSidebar).addClass('show-overlay-sidebar');
+            ]
+            
         })
-    })
-    // $(btns).on('click', () => {
-    //     $(sidebar).addClass("show-sidebar");
-    //     $(ovlSidebar).addClass('show-overlay-sidebar');
-    // });
-
-    $(btnHideSidebar).on('click', () => {
-        $(sidebar).removeClass('show-sidebar');
-        $(ovlSidebar).removeClass('show-overlay-sidebar');
-    })
 
 
-    $(ovlSidebar).on('click', () => {
-        $(sidebar).removeClass('show-sidebar');
-        $(ovlSidebar).removeClass('show-overlay-sidebar');
-    })
 
+        var btnSidebar = $('.btn-show-sidebar');
+        var btnHideSidebar = $('.btn-hide-sidebar');
+        var ovlSidebar = $('.overlay-sidebar');
+
+        
+        var sidebar = $('.sidebar');
+        let screenCenter = ($('section.sec-admin-main').width() / 2) - 200;
+        // sidebar.attr('style', 'left:'+ screenCenter +'px;')
+        let btnAddCategory = $('.btn-add-category');
+        let btnDelCategory = $('.btn-delete-category');
+        // $(btnSidebar).each(function (i, elem) {
+            $('body').on('click', '.btn-show-sidebar', (e) => {
+                if(e.target.nodeName === "FONT") {
+                    e.target = e.target.parentNode;
+                    // console.log(e);
+                } 
+                $('.btn-add-category').attr('href', "api/category/add");
+                e.preventDefault();
+                var res = $.ajax({
+                    method:"POST", 
+                    url: e.target.href,
+                    async: false,
+                    success: (result) => {
+                        return result;
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                }).responseJSON;
+                // console.log(res.data)
+                let title = $('#titleShow')
+                if(res) {
+                    if(res.data === undefined) {
+                        title.text('เพิ่มหมวดหมู่')
+                    } else {
+                        title.text('แก้ไขรายการ : ' + res.data[0].item_description )
+                        btnAddCategory.attr('href', 'api/category/edit/' + res.data[0]._id)
+                        btnAddCategory.attr('data-action', 'edit')
+                        btnAddCategory.text('แก้ไข');
+                        formEdit.itemDescription.value = res.data[0].item_description
+                        formEdit.itemStatus.checked = res.data[0].item_status === 1 ? true : false;
+                    }
+                }
+
+                $(sidebar).eq(0).addClass('show-sidebar')
+                $(ovlSidebar).addClass('show-overlay-sidebar');
+            })
+        // })
+        // $(btns).on('click', () => {
+        //     $(sidebar).addClass("show-sidebar");
+        //     $(ovlSidebar).addClass('show-overlay-sidebar');
+        // });
+
+        $(btnHideSidebar).on('click', (e) => {
+            $('.text-validate').addClass('invisibility')
+            $('.text-validate').text('กรุณากรอกหมวดหมู่ !')
+            $(sidebar).removeClass('show-sidebar');
+            $(ovlSidebar).removeClass('show-overlay-sidebar');
+            e.preventDefault();
+        })
+
+
+        $(ovlSidebar).on('click', (e) => {
+            // window.location.pathname.indexOf('category') > -1 ?  ($(formEdit.itemDescription).val('') && $(formEdit.itemStatus).attr('checked', false)) : '';
+            formEdit.itemDescription.value = ''
+            formEdit.itemStatus.checked = true
+            $('.text-validate').addClass('invisibility')
+            $(sidebar).removeClass('show-sidebar');
+            $(ovlSidebar).removeClass('show-overlay-sidebar');
+            e.preventDefault();
+        })
+
+
+
+        $('body').on('click', '.btn-add-category', async(e) => {
+            e.preventDefault();
+            if(formEdit.itemDescription.value.length > 0) {
+                let itemStatus = formEdit.itemStatus.checked === true ? 1 : 0;
+                let dataSend = {"item_description": formEdit.itemDescription.value, "item_status":itemStatus};
+                let res = await $.ajax({
+                    method:"POST",
+                    url: e.target.href,
+                    data: dataSend,
+                    success: (result) => {
+                        // console.log(result)
+                        // return false;
+                    },
+                    error: (err) => {
+                        // console.log(err)
+                        // return false;
+                    },
+                    complete: () => {
+                    }
+                })
+                
+                console.log(res);
+                if(e.target.dataset.action === 'edit') {
+                    console.log(res.data);
+                    if(res.data === 'success') {
+                        $(sidebar).removeClass('show-sidebar');
+                        $(ovlSidebar).removeClass('show-overlay-sidebar');
+                        swal({
+                            title: "แก้ไขข้อมูลเรียบร้อยแล้ว !",
+                            text: ' ',
+                            icon: "success",
+                            button: false,
+                            timer: 1500
+                        })
+                        formEdit.itemDescription.value = '';
+                        formEdit.itemStatus.checked = false;
+                        tableCategory.ajax.reload();
+                    } else {
+                        let textAlert = $('.text-validate');
+                        textAlert.removeClass("invisibility")
+                        textAlert.text('ไม่สามารถเพิ่มได้เนื่องจากประเภท ' + res.errDesc + ' มีอยู่แล้ว')
+                    }
+                } else {
+                    if(res.err === 'manyItems') {
+                        let textAlert = $('.text-validate');
+                        textAlert.removeClass("invisibility")
+                        textAlert.text('ไม่สามารถเพิ่มได้เนื่องจากประเภท ' + res.errDesc + ' มีอยู่แล้ว')
+                    } else {
+                        $(sidebar).removeClass('show-sidebar');
+                        $(ovlSidebar).removeClass('show-overlay-sidebar');
+                        swal({
+                            title: "เพิ่มข้อมูลเรียบร้อยแล้ว !",
+                            icon: "success",
+                            button: true,
+                            content: 'TEST',
+                            timer: 1500
+                        })
+                        .then(() => {
+                            //   ต่อนี่
+                            tableCategory.ajax.reload();
+                            formEdit.itemDescription.value = '';
+                            formEdit.itemStatus.checked = false;
+                            console.log("HEYYYYYY")
+                        })
+                    }
+                }
+            } else {
+                let textAlert = $('.text-validate');
+                textAlert.removeClass("invisibility")
+                textAlert.text('กรุณากรอกประเภท')
+            }
+
+        })
+
+        $('body').on('click', '.btn-approve', (e) => {
+            swal({
+                title: "ยืนยันการทำรายการ ?",
+                text: `ทำการอนุมัติรายการเบิก ${e.currentTarget.dataset.orderno}`,
+                icon: "warning",
+                buttons: {
+                    "ยืนยัน": {
+                        value: 'confirm'
+                    },
+                    cancel: "ยกเลิก"
+                },
+                dangerMode: true,
+            }).then(async(value) => {
+                if(value === 'confirm'){       
+                    let url = gUrl + '/api/itemwithdraw/changestatus/' + e.currentTarget.dataset.orderid;
+                    // console.log(url);
+                    $.ajax({
+                        url: url,
+                        method: "POST", 
+                        data : {changeStatus: 'Approve', userId: e.currentTarget.dataset.userid},
+                        success: (result) => {
+                            console.log(result);
+                        }
+                    })
+                    
+                }
+            })
+        })
+        $('body').on('click', '.btn-disapprove', (e) => {
+            swal({
+                title: "ยืนยันการทำรายการ ?",
+                text: `ทำการอนุมัติรายการเบิก ${e.currentTarget.dataset.orderno}`,
+                icon: "warning",
+                buttons: {
+                    "ยืนยัน": {
+                        value: 'confirm'
+                    },
+                    cancel: "ยกเลิก"
+                },
+                dangerMode: true,
+            }).then(async(value) => {
+                if(value === 'confirm'){       
+                    let url = gUrl + '/api/itemwithdraw/changestatus/' + e.currentTarget.dataset.orderid;
+                    $.ajax({
+                        url: url,
+                        method: "POST", 
+                        data : {changeStatus: 'disapprove', userId: e.currentTarget.dataset.userid},
+                        success: (result) => {
+                            console.log(result);
+                        }
+                    })
+                }
+            })
+        })
+        // edit Order #####
+        $('body').on('click', '.btn-print', (e) => {
+            e.preventDefault();
+            $.ajax({
+                url: e.currentTarget.href,
+                method: "POST",
+                success: (result) => {
+                    var printWindow = window.open('', '', 'height=700,width=1200,scrollbars=1');
+                    printWindow.document.write(result.html);
+                    setTimeout(() => {printWindow.document.close()}, 600);
+                }
+            })
+        })
+        $('body').on('click', '.btn-delete-category', async (e) => {
+            if(e.target.nodeName === 'FONT') {
+                e.preventDefault();
+                e = e.target.parentNode
+                var { href, dataset, offsetHeight, offsetWidth } = e;
+            } else {
+                e.preventDefault();
+                var { href, dataset, offsetHeight, offsetWidth } = e.target;
+            }
+
+            swal({
+                title: "ยืนยันการทำรายการ ?",
+                text: `ต้องการจะลบหมวดหมู่ ${dataset.desc} ใช่หรือไม่`,
+                icon: "warning",
+                buttons: {
+                    "ยืนยัน": {
+                        value: 'confirm'
+                    },
+                    cancel: "ยกเลิก"
+                },
+                dangerMode: true,
+            }).then(async(value) => {
+                if(value === 'confirm'){       
+                    let reqData = await callAPI(href, dataset.itemid, 'delete/');
+                    console.log(reqData);
+                    if(reqData === "success") {
+                        swal({
+                            title: "ลบข้อมูลเรียบร้อยแล้ว !",
+                            text: ' ',
+                            icon: "success",
+                            button: false,
+                            timer: 1500
+                        }).then(async() => {
+                            ovlSidebar.addClass('show-overlay-sidebar');
+                            ovlSidebar.append(`
+                                <div id='spinner' style='top:calc(${ovlSidebar.height() / 2}px - 3rem);left:calc(${ovlSidebar.width() / 2}px - 3rem)'>
+                                    <div class="spinner-border text-primary" role="status" style="width:5rem;height:5rem;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                
+                            `)
+                            setTimeout(() => {
+                                ovlSidebar.removeClass('show-overlay-sidebar');
+                                ovlSidebar.empty();
+                            }, 600)
+                            tableCategory.ajax.reload();
+                        })
+                    } else if (reqData === "using") {
+
+                    } else if (reqData === 'error') {
+
+                    }
+                }
+            })
+        })
+
+
+
+        $('body').on('click', '.btn-add-profile', async(e) => {
+            var { action:ac } = e.target.dataset;
+            let errCount = 0;
+            if(ac === 'add') {
+                if(form.passwordConf.value.length > 0 && form.password.value.length > 0) {
+                    if(form.password.value !== form.passwordConf.value){
+                        $(`span[data-from="password"]`).text('รหัสยืนยันไม่ตรง')
+                        $(`span[data-from="passwordConf"]`).text('กรุณากรอกให้ตรงกับรหัสผ่าน')
+                        $(form.password).addClass('is-invalid');
+                        $(form.passwordConf).addClass('is-invalid');
+                        form.passwordConf.focus();
+                        errCount++;
+                    } else {
+                        $(form.password).removeClass('is-invalid');
+                        $(form.passwordConf).removeClass('is-invalid');
+                        $(`span[data-from="passwordConf"]`).text('กรุณากรอกข้อมูล') ;
+                    }
+                }
+                if(form.email.value.length > 0) {
+                    let validate = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z0-9])(?:\.{0,11}[a-zA-Z0-9](?:[a-zA-Z0-9-]{1,61}[a-zA-Z0-9])?)*$/;
+                    console.log(validate.test(form.email.value));
+                    if(!validate.test(form.email.value)) {
+                        form.email.classList.add('is-invalid');
+                        $('span[data-from="email"]').addClass('error');
+                        $('span[data-from="email"]').text('รูปแบบอีเมลไม่ถูกต้อง');
+                        errCount++;
+                    } else {
+                        form.email.classList.remove('is-invalid');
+                        $('span[data-from="email"]').removeClass('error');
+                    }
+                }
+                try {
+    
+    
+                    let x = await $.ajax({
+                        url:"api/users",
+                        method: 'POST', 
+                        data : $(form).serialize(),
+                        success: (result) => {
+                            if(result.userExist === true) {
+                                $(form.username).addClass('is-invalid');
+                                $(`span[data-from="username"]`).text(`กรุณาเปลี่ยนชื่อผู้ใช้งานเนื่องจากมี ${form.username.value} อยู่แล้ว`);
+                                $(form.username).focus();
+                                errCount++;
+                            } else {
+                                // $(form.username).addClass('is-invalid');
+                                $(`span[data-from="username"]`).text('กรุณากรอกข้อมูล')
+                            }
+                            result.objNull.map((value, index) => {
+                                switch(value) {
+                                    case 'username':
+                                        $(`span[data-from="${value}"]`).addClass('error');
+                                        $(form[value]).addClass('is-invalid');
+                                        errCount === 0 ? $(form[value]).focus() : '';
+                                        errCount++;
+                                        break;
+                                    case 'password':
+                                        $(`span[data-from="${value}"]`).addClass('error');
+                                        $(form[value]).addClass('is-invalid');
+                                        errCount === 0 ? $(form[value]).focus() : '';
+                                        errCount++;
+                                        break;
+                                    case 'passwordConf':
+                                        $(`span[data-from="${value}"]`).addClass('error');
+                                        $(form[value]).addClass('is-invalid');
+                                        errCount === 0 ? $(form[value]).focus() : '';
+                                        errCount++;
+                                        break;
+                                    case 'firstname':
+                                        $(`span[data-from="${value}"]`).addClass('error');
+                                        $(form[value]).addClass('is-invalid');
+                                        errCount === 0 ? $(form[value]).focus() : '';
+                                        errCount++;
+                                        break;
+                                    case 'lastname':
+                                        $(`span[data-from="${value}"]`).addClass('error');
+                                        $(form[value]).addClass('is-invalid');
+                                        errCount === 0 ? $(form[value]).focus() : '';
+                                        errCount++;
+                                        break;
+                                    case 'userlevel':
+                                        $(`span[data-from="${value}"]`).addClass('error');
+                                        $(form[value]).addClass('is-invalid');
+                                        errCount === 0 ? $(form[value]).focus() : '';
+                                        errCount++;
+                                        break;
+                                }
+                            })
+    
+                        }
+                    })        
+                } catch(err) {
+    
+                    console.log(err)
+                    if(err.statusText === "Payload Too Large") {
+                        swal({
+                            title: "ไม่สามารถเพิ่มข้อมูลได้ !",
+                            text: 'เนื่องจากรูปภาพมีขนาดเกินกำหนด กรุณาเปลี่ยนรูปภาพ',
+                            icon: "error",
+                            button: false,
+                            timer: 1500
+                        })
+                        return false; 
+                    } 
+                }
+                    
+            } else {
+                
+            }
+    
+            if(errCount > 0) return false;
+            var formData = new FormData(form);
+            formData.forEach((val, key, parent) => {
+                console.log(val, key, parent)
+            })
+            // formData.test =  form.fileUpload.files[0];
+            // formData.append('test', form.fileUpload.files[0]);
+            // console.log(formData)
+            // console.log(formData.getAll('test').values)
+            let { typed, action, editbyid } = e.target.dataset;
+            console.log(editbyid)
+            let urlPost = !editbyid ? gUrl + '/api/users/' + action : gUrl + '/api/users/' + action +'/' + editbyid;
+            // console.log(urlPost);
+            // return false;
+                var addData = await $.ajax({
+                    url: urlPost,
+                    method: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    // data: $(form).serialize(),
+                    success: (result) => {
+                        return result;
+                    }, 
+                    error: (err) => {
+                        console.log(err);
+                    }
+                })
+                console.log(addData);
+                // return false;
+                if(addData.data !== undefined) {
+                    if (addData.action == 'edit') {
+                        swal({
+                            title: "แก้ไขข้อมูลเรียบร้อยแล้ว !",
+                            text: ' ',
+                            icon: "success",
+                            button: false,
+                            timer: 1500
+                        }).then(() => {
+                            // tablesx.ajax.reload();
+                            $('#ajaxLargeModalProfile').modal('hide')
+                            window.location.reload();
+                        })
+                    }
+                }
+                // } 
+    
+            // $('.modal').modal('toggle')
+        })
+     
+        
+        
+        
+        
+    } catch(err) {
+            
+    }
 
     // cal value
     var radiox = $('.chk');
@@ -55,11 +563,26 @@ $(document).ready(function ($) {
     // Hide userBlockContent
     var blockUser = $('.blockx-userx');
     var showAndHideBlockx = $('#show-hide-blockx');
+    let c = 0;
+    $('body').on('click', (e) => {
+        if(showAndHideBlockx.hasClass('show-blockx')) {
+            c++;
+            if(c > 1) {
+                console.log(e)
+                if(!$(e.target).hasClass('dd')) {
+                    showAndHideBlockx.toggleClass('show-blockx');
+                    $(blockUser).hide('blind', 500);
+                    c = 0;
+                } 
+            }
+            console.log(c)
+        };
+    })
 
     $(showAndHideBlockx).on('click', function () {
         $(this).toggleClass('show-blockx');
         var checkbox = $(this).hasClass('show-blockx');
-        console.log(checkbox);
+        // console.log(checkbox);
         if (checkbox == true) {
             $(blockUser).show('blind', 500)
         } else {
@@ -100,8 +623,8 @@ $(document).ready(function ($) {
                     result = totalpricex * ntotaltime;
                     $(resultPrice).val(result);
                     $(resultTime).val(ntotaltime);
-                    console.log(result);
-                    console.log(ntotaltime);
+                    // console.log(result);
+                    // console.log(ntotaltime);
                 })
             })
 
@@ -132,7 +655,7 @@ $(document).ready(function ($) {
             $(chkval).on('click', () => {
                 var checkSelect = $('input[type="checkbox"]:checked').length;
                 $(log).val(checkSelect);
-                console.log(checkSelect);
+                // console.log(checkSelect);
                 var logpricetotal = logx * checkSelect;
                 $(logprice).val(logpricetotal);
 
@@ -144,10 +667,10 @@ $(document).ready(function ($) {
 
     $(chkval).each(function (i) {
         i += 1;
-        console.log(i);
-        console.log($(this).val() + ' - ' + timesec);
+        // console.log(i);
+        // console.log($(this).val() + ' - ' + timesec);
         var x = $(this).val();
-        console.log(x);
+        // console.log(x);
         var tbonc1 = $('#tboncb1').text();
         var tbonc2 = $('#tboncb2').text();
         var tbonc3 = $('#tboncb3').text();
@@ -192,9 +715,9 @@ $(document).ready(function ($) {
         
     });
     var strTotalxsum = String(totalxsum)
-    console.log(strTotalxsum);
-    console.log(totalxsum.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
-    console.log(strTotalxsum.replace(/(?=\d{3})*,(?=\d{3})/g, ''))
+    // console.log(strTotalxsum);
+    // console.log(totalxsum.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+    // console.log(strTotalxsum.replace(/(?=\d{3})*,(?=\d{3})/g, ''))
 
 
     // เลือกเดือน, ปี, ประเภท
@@ -227,11 +750,11 @@ $(document).ready(function ($) {
                 $(this).addClass('cal');
                 $(this).prop('hidden', false);
                 var cal2 = Number($(this).children('td').children('input.totalprice').val());
-                console.log(cal2);
+                // console.log(cal2);
                 // monthinn = $(this).children('td').children('p').children('span.spngetmonthin'),
                 // monthVal = $(monthinn).text();
                 totalxsum += cal2;
-                console.log(totalxsum);
+                // console.log(totalxsum);
                 $(sumprice).text(moneyFormat(totalxsum) + "บาท");
             } else if (repsCateVal === 'showall') {
                 $(yearSel).prop('disabled', true);
@@ -409,7 +932,7 @@ $(document).ready(function ($) {
 
             }
         })
-        console.log(trRows);
+        // console.log(trRows);
         if (trRows.length == 0) {
             showNum(0, 0, 0);
         } else {
@@ -431,10 +954,10 @@ $(document).ready(function ($) {
 
     $.each(ts1, function (k, val) {
         var txt = this.innerText;
-        console.log(txt);
+        // console.log(txt);
         testPa.push(txt);
     })
-    console.log(testPa);
+    // console.log(testPa);
 
     // $('#pagination-container').pagination({
     //     dataSource: testPa,
@@ -505,7 +1028,7 @@ $(document).ready(function ($) {
                     $(this).prop('hidden', true);
                 }
             })
-            console.log(showin2);
+            // console.log(showin2);
             if (showin2.length == 0) {
                 showNum(0, 0, 0);
 
@@ -515,7 +1038,7 @@ $(document).ready(function ($) {
             }
             if (trNumx > maxRows) {
                 var pagenumOther = Math.ceil(trNumx / maxRows);
-                console.log(pagenumOther);
+                // console.log(pagenumOther);
                 for (var i = 1; i <= pagenumOther; i++) {
                     $('.pagination').append('<li class="page-item" data-page=' + i + '><a class="page-link">' + i + '</a></li>').show();
                 }
@@ -596,14 +1119,14 @@ $(document).ready(function ($) {
         for (var i = 0; i < rcateArr.length; i++) {
             if (rcateAddValx == rcateArr[i]) {
                 alert('ไม่สามารถเพิ่ม "ชื่อ" ประเภทห้องซ้ำกันได้ !!');
-                console.log(rcateArr[i]);
+                // console.log(rcateArr[i]);
                 tmp = rcateArr[i];
                 e.preventDefault();
                 break;
             }
 
         }
-        console.log(tmp)
+        // console.log(tmp)
         if (tmp == '') {
             alert('เพิ่มห้องพักสำเร็จ')
         }
@@ -617,14 +1140,14 @@ $(document).ready(function ($) {
         for (var i = 0; i < rcateArr.length; i++) {
             if (rcateEditVal == rcateArr[i]) {
                 alert('ไม่สามารถเปลี่ยน "ชื่อ" ประเภทห้องซ้ำกันได้ !!');
-                console.log(rcateArr[i]);
+                // console.log(rcateArr[i]);
                 tmp = rcateArr[i];
                 e.preventDefault();
                 break;
             }
 
         }
-        console.log(tmp)
+        // console.log(tmp)
         if (tmp == '') {
             alert('แก้ไขห้องพักสำเร็จ')
         }
@@ -640,13 +1163,13 @@ $(document).ready(function ($) {
         var spnHideTextVal = $(spnHideText).text();
         var nameVal = $(this).val()
         $(spnHideText).text(nameVal);
-        console.log(spnHideTextVal)
+        // console.log(spnHideTextVal)
     })
     $(iconUtil).keyup(function() {
         var showxClass = $(showx).attr('class')
         var iconVal = $(this).val();
         $(showx).attr('class', iconVal)
-        console.log(iconVal)
+        // console.log(iconVal)
     })
     if (spnHideText.length > 0) {
         $(showx).hover(function () {
@@ -689,9 +1212,9 @@ function showNum(first, last, total) {
 $(function () {
     var totalRows = $('#mytable tbody tr').length;
     var showID = [];
-    $('table tr:eq(0)').prepend('<th>ID</th>');
+    $('table.tablex tr:eq(0)').prepend('<th>ID</th>');
     var id = 0;
-    $('table tr:gt(0)').each(function (key, val) {
+    $('table.tablex tr:gt(0)').each(function (key, val) {
         showID.push(key);
         if (this.className !== 'repsresult table-success') {
             id++;
@@ -774,7 +1297,7 @@ $(function () {
         var optionx = selectY.attr('options');
     }
     if (optionx != undefined) {
-        console.log(optionx)
+        // console.log(optionx)
 
         $.each(years, function (yi, yval) {
             optionx[optionx.length] = new Option(yval, yval);
@@ -787,7 +1310,7 @@ $(function () {
         var options = selectM.attr('options');
     };
     if (options != undefined) {
-        console.log(options)
+        // console.log(options)
         $.each(month, function (i, val) {
             options[options.length] = new Option(val, i + 1);
         });
@@ -842,8 +1365,8 @@ function encodeImgFileAsURL() {
         var fileToLoad = filesSelected[0];
 
         var fileReader = new FileReader();
-        console.log(fileToLoad)
-        console.log(fileReader)
+        // console.log(fileToLoad)
+        // console.log(fileReader)
         fileReader.onload = function (fileLoadedEvent) {
             var srcData = fileLoadedEvent.target.result;
             var newImage = document.createElement('img');
@@ -852,7 +1375,7 @@ function encodeImgFileAsURL() {
             newImage.src = srcData;
 
             document.getElementById('imgTest').innerHTML = newImage.outerHTML;
-            console.log('Converted Base64 version is ' + document.getElementById('imgTest').innerHTML)
+            // console.log('Converted Base64 version is ' + document.getElementById('imgTest').innerHTML)
         }
         fileReader.readAsDataURL(fileToLoad);
     }
@@ -983,4 +1506,42 @@ function encodeImgFileAsURL() {
     // }
 
 
+const getBase64Image = (img) => { 
+    let image = new Image();
+    image.onload = function(el) {
+        var elem = document.createElement('canvas');//create a canvas
+  
+        //scale the image to 600 (width) and keep aspect ratio
+        var scaleFactor = resize_width / el.target.width;
+        elem.width = resize_width;
+        elem.height = el.target.height * scaleFactor;
+  
+        //draw in canvas
+        var ctx = elem.getContext('2d');
+        ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
+  
+        //get the base64-encoded Data URI from the resize image
+        var srcEncoded = ctx.canvas.toDataURL(el.target, 'image/jpeg', 0);
+  
+        //assign it to thumb src
+        document.querySelector('#image').src = srcEncoded;
+  
+        /*Now you can send "srcEncoded" to the server and
+        convert it to a png o jpg. Also can send
+        "el.target.name" that is the file's name.*/
+  
+      }
+    var fileReader = new FileReader();
+    console.log(fileReader);
+    console.log($('#pictureString'));
+    fileReader.onloadend = function(fileLoadedEvent) {
+        var srcData = fileLoadedEvent.target.result
+        $('#profile-picture').attr('src', srcData)
+        $('#pictureString').val(btoa(srcData));
+    }
+    fileReader.readAsDataURL(img);
 
+    // return false
+
+}   
+      

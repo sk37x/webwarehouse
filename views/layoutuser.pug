@@ -2,103 +2,201 @@ doctype html
 html(lang="th")
 
     head
-        meta(charset='UTF-8')
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
         title HOTEL
+        link(rel='stylesheet', type='text/css' href='/stylesheets/font-face.css')
         link(rel='stylesheet', type='text/css' href='/stylesheets/admin.css')
-        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", crossorigin="anonymous")
-        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous")
-        link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+        link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css", rel="stylesheet")
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.3.1/css/all.css")
+        link(rel="stylesheet" href="/stylesheets/bootstrap-datepicker.css")
+        //- link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+        //- link(rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css")
         //- <!-- Latest compiled and minified CSS -->
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css")
+        //- link(rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css")
 
+        //- Datatables component 
+        //- link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css")
+        link(rel="stylesheet" href="/stylesheets/dataTables.bootstrap4.min.css")
+        link(rel="stylesheet" href="/stylesheets/autocomplete-style.css")
 
         block style
 
 
     body
-        header.admin-head
-            .admin-head-wrap
-                span.m-a-10(style='margin: 10px')
-                    h1 HOTEL
-                span.flex-c-m(class='contentTop', style='height:100%;float:right;padding:10px')
+        #main
+            header.admin-head
+                //- .admin-head-wrap
+                .admin-head-logo
+                    a.logo(style='color:white') Warehouse System
+                .admin-head-custom(class='contentTop')
                     //- h3 sk37.x ADMIN
-                    //- a.text-decor-none(href='/backendx/logout', style='color:white')
-                    div(id="show-hide-blockx" style='color:white;cursor:pointer')
-                        span.blockx-images
-                        span(class='btxNowUser', style='text-transform: uppercase') 
-                        //- button.btn.btn-primary sk37.x ADMIN
-            .blockx-userx
-                .ui-headerx.t-center
-                    span.blockx-imagesx
-                    span.flex-c-m.btxNowUser(style='color:white')
-                .ui-headerx-btn
-                    button.btn.btn-primary(style='float:left') Profile
-                    a.text-decor-none(href='/backendx/logout' style='float:right; color:white')
-                        button.btn.btn-danger Sign Out
-        nav.admin-nav
-            .con-ad.flex-c-m.m-a-10
-                span.blockx-images(style='float:left')
-                span.btxNowUserx.txtth-sm(style='text-transform: uppercase') 
-                
-            .con-ad.m-a-10.t-center(style='clear:both')
-                a.text-decor-none(href="/backendx")
-                    h5.txtlst.trans-2.m-t-8 หน้าแรก
-            .lst-admin
-                .lst-item
-                    .lst-first
-                        span Booking
-                    ul
-                        a.text-decor-none(href='/backendx/booking/allbook/all-list')
-                            li รายการจอง
-                    .lst-first
-                        span จัดการห้องพัก
-                    ul
-                        a.text-decor-none(href="/backendx/manageroom/manage-rooms")
-                            li จัดการประเภทห้องพัก      
-                        a.text-decor-none(href="/backendx/manageroom/manage-public-utility")
-                            li จัดการสาธารณูปโภค
-                        a.text-decor-none(href="/backendx/manageroom/manageroomsx")
-                            li จัดการห้องพัก
-                    .lst-first
-                        span รายงาน
-                    ul
-                        a.text-decor-none(href='/backendx/report/reservation')    
-                            li ยอดการจอง
-                        a.text-decor-none(href='/backendx/report/totalprice')
-                            li ยอดเงิน
-                        a.text-decor-none(href='/backendx/report/bookformat')
-                            li รูปแบบการจอง
-                    #system-admin
+                    a.text-decor-none(href='/backendx/logout', style='color:white')
+                    ul.list-inline.float-right.mb-0
+                        li(id="show-hide-blockx" style='color:white;cursor:pointer').dd
+                            span.blockx-images
+                                img.image-profile(src=(userData ? userData.image.path.replace('public\\', "../") : ''), onerror='this.src=this.src.split("backendx/")[0] + this.src.split("backendx/")[1]', style='width:42px;height:42px;float:left;margin-right:15px;border-radius:50%;')
+                            span(class='btxNowUser', style='text-transform: uppercase') 
+                            //- button.btn.btn-primary sk37.x ADMIN
+                    ul.list-inline.mb-0
+                        li.float-left
+                            button.button-menu-mobile(style='display:none')
+                                i.fa.fa-fw.fa-bars
+                .blockx-userx.dd
+                    .ui-headerx.t-center.dd
+                        span.dd(style='color:white;')= 'Hello, ' + userData.userlogin.username
+                        //- span.blockx-imagesx
+                        //- span.flex-c-m.btxNowUserx(style='color:white;flex-direction:column;')
+                    a.ui-headerx-btn#toggleProfile(href=(userData ? '/backendx/api/users/modal/'+ userData._id + '/add-profile' : false), style='padding:10px 20px;' data-target="#ajaxLargeModalProfile" role="button" data-toggle="modal")
+                        i.fas.fa-user
+                            font.thNews(style='margin-left: 20px;') Profile
+                    a.ui-headerx-btn.text-decor-none(href='/backendx/logout' style='padding:10px 20px;')
+                        i.fas.fa-sign-out-alt
+                            font.thNews(style='margin-left: 20px;') Sign out
+            nav.admin-nav
+                .wrap-nav
+                        //- 
+                            .con-ad.flex-c-m.m-a-10
+                                span.blockx-images(style='float:left')
+                                span.btxNowUserx.txtth-sm(style='text-transform: uppercase') 
+                        .con-ad.m-a-10.t-left(style='clear:both;margin-top:20px;margin-bottom:20px;')
+                            .imageblock
+                                img.image-profile(src=(userData ? userData.image.path.replace('public\\', "../") : ''), onerror='this.src=this.src.split("backendx/")[0] + this.src.split("backendx/")[1]', style='width:50px;height:50px;float:left;margin-right:15px;border-radius:50%;')
+                            p#username-profile.thNews(style='margin:0;font-weight:500')= userData ? userData.firstname + ' ' + userData.lastname : ''
+                            p#name-profile.thNews(style='margin:0;font-weight:500')= userData ? userData.userlevel.userlevel : ''
+                        #sidebar-menu.thNews
+                            - if(userlv)
+                                - if(userlv.toLowerCase() === 'admin')
+                                    ul
+                                        li.submenu
+                                            a.text-decor-none(href="/backendx", class=(title==="Home" ? 'active' : '')) 
+                                                i.fas.fa-home 
+                                                h5 หน้าแรก
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/category", class=(title==="category" ? 'active' : ''))
+                                                i.fas.fa-th-large
+                                                h5 หมวดหมู่วัสดุ
+                                        li.submenu          
+                                            a.text-decor-none( href="/backendx/product", class=(title==="product" ? 'active' : ''))
+                                                i.fas.fa-boxes
+                                                h5.m-t-8 วัสดุ
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/itemwithdraw", class=(title==="itemwithdraw" ? 'active' : ''))
+                                                i.fas.fa-chart-bar
+                                                h5.m-t-8 เบิกวัสดุ
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/reportx/itemwithdraw", class=(title==="reportwithdraw" ? 'active' : ''))
+                                                i.fas.fa-chart-bar
+                                                h5.m-t-8 รายงานการเบิกวัสดุ
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/reportx/product", class=(title==="reportproduct" ? 'active' : ''))
+                                                i.fas.fa-chart-bar
+                                                h5.m-t-8 รายงานวัสดุคงคลัง
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/users", class=(title==="users" ? 'active' : ''))
+                                                i.fas.fa-users-cog
+                                                h5 จัดการสมาชิก
+                                - else if(userlv.toLowerCase() === 'user')
+                                    ul
+                                        li.submenu          
+                                            a.text-decor-none( href="/backendx/product", class=(title==="product" ? 'active' : ''))
+                                                i.fas.fa-boxes
+                                                h5.m-t-8 วัสดุ
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/itemwithdraw", class=(title==="itemwithdraw" ? 'active' : ''))
+                                                i.fas.fa-chart-bar
+                                                h5.m-t-8 เบิกวัสดุ
+                                        li.submenu
+                                            a.text-decor-none( href="/backendx/reportx/itemwithdraw", class=(title==="reportwithdraw" ? 'active' : ''))
+                                                i.fas.fa-chart-bar
+                                                h5.m-t-8 รายงานการเบิกวัสดุ
+                            //- 
+                                li.submenu
+                                    a.text-decor-none(href='/backendx/user/level') ระดับสมาชิก
+                                li.submenu
+                                    a.text-decor-none(href='/backendx/user/position') จัดการตำแหน่ง
+                                li.submenu
+                                    a.text-decor-none(href='/backendx/user/manage') จัดการสมาชิก
+
+
+                                
+            //-                                      
+                .lst-admin
+                    .lst-item
                         .lst-first
-                            span จัดการสมาชิก
+                            span Booking
                         ul
-                            a.text-decor-none(href='/backendx/user/level')
-                                li ระดับสมาชิก
-                            a.text-decor-none(href='/backendx/user/position')
-                                li จัดการตำแหน่ง
-                            a.text-decor-none(href='/backendx/user/manage')
-                                li จัดการสมาชิก
-        
-        section.sec-admin-main
-            .admin-main-wrap
-
+                            a.text-decor-none(href='/backendx/booking/allbook/all-list')
+                                li รายการจอง
+                        .lst-first
+                            span จัดการห้องพัก
+                        ul
+                            a.text-decor-none(href="/backendx/manageroom/manage-rooms")
+                                li จัดการประเภทห้องพัก      
+                            a.text-decor-none(href="/backendx/manageroom/manage-public-utility")
+                                li จัดการสาธารณูปโภค
+                            a.text-decor-none(href="/backendx/manageroom/manageroomsx")
+                                li จัดการห้องพัก
+                        .lst-first
+                            span รายงาน
+                        ul
+                            a.text-decor-none(href='/backendx/report/reservation')    
+                                li ยอดการจอง
+                            a.text-decor-none(href='/backendx/report/totalprice')
+                                li ยอดเงิน
+                            a.text-decor-none(href='/backendx/report/bookformat')
+                                li รูปแบบการจอง
+                        #system-admin
+                            .lst-first
+                                span จัดการสมาชิก
+                            ul
+                                a.text-decor-none(href='/backendx/user/level')
+                                    li ระดับสมาชิก
+                                a.text-decor-none(href='/backendx/user/position')
+                                    li จัดการตำแหน่ง
+                                a.text-decor-none(href='/backendx/user/manage')
+                                    li จัดการสมาชิก
             
-                block content
+            section.sec-admin-main
+                .admin-main-wrap
+                    block content
 
+
+        .modal.fade.custom-modal#ajaxLargeModalProfile(role="dialog", tabindex="-1", aria-labelledby="ajaxModalLabelProfile" aria-hidden="true")
+            .modal-dialog.modal-lg(role='document')
+                .modal-content
+                
+                
+
+
+        script(type='text/javascript', src="/javascripts/jquery-3.2.1.min.js")
+        script(type='text/javascript', src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js")
+        script(type='text/javascript', src='/javascripts/function.js')
+        
+        script(type='text/javascript', src='/javascripts/jquery-ui-1.12.1/jquery-ui.js')
+        script(type='text/javascript', src="/javascripts/config.js")
+        script(type='text/javascript', src="/javascripts/bootstrap-datepicker-custom.js")
+        script(type='text/javascript', src="/javascripts/bootstrap-datepicker.th.min.js")
+        //- autocomplete Component ###
+        script(type='text/javascript', src="https://unpkg.com/@trevoreyre/autocomplete-js")
 
         
-
-        script(src="/javascripts/jquery-3.2.1.min.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
-        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js")
-        script(src="/javascripts/jquery.ajax.js")
-        script(src="/javascripts/jquery.mainxs.js")
-        script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js')
-        script(src='/javascripts/jquery.chart.js')
-        script(src='/javascripts/jquery-ui-1.12.1/jquery-ui.js')
-        //- script(src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
-        script(src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js')
-        script(src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js")
         
+        script(type='text/javascript', src="https://unpkg.com/sweetalert/dist/sweetalert.min.js")
+        script(type='text/javascript', src="/javascripts/jquery.dataTables.min.js")
+        script(type='text/javascript', src="/javascripts/dataTables.bootstrap4.min.js")
+        script(type='text/javascript', src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+        script(type='text/javascript', src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js")
+        //- NICESROLL Component ###
+        script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js')
+        //- Bootstrap Component ###
+        script(type='text/javascript', src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+        script(type='text/javascript', src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js")
+        script(type='text/javascript', src="/javascripts/jquery.mainxs.js")
+        //- script(type='text/javascript', src="https://code.jquery.com/ui/1.12.1/jquery-ui.js")
+        script(type='text/javascript', src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
+        script(type='text/javascript', src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js')
+        
+        script(type='text/javascript', src="/javascripts/jquery.ajax.js")
+        block script

@@ -1,0 +1,49 @@
+body,
+* {
+  margin: 0px;
+  padding: 0px;
+  font-family: "TH SarabunNew", tahoma, "sans-serif" !important;
+}
+.thNews {
+  font-family: "TH SarabunNew", tahoma, "sans-serif" !important;
+  font-size: 16pt;
+}
+
+table.layout-c tbody tr td,
+table.layout-c thead tr th {
+  padding: 0.75rem;
+}
+
+@media print {
+  @page {
+    size: 'A4';
+    margin: 0px;
+    
+  }
+  /* html {
+      background-color: #FFFFFF; 
+      margin: 0px;  /* this affects the margin on the html before sending to printer 
+  } */
+  body {
+      /* border: solid 1px blue ; */
+      /* margin-left: 20mm; */
+      margin:20mm 20mm 20mm 20mm;
+  }
+  table {
+    page-break-after: auto;
+  }
+  table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  table td {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  table thead {
+    display: table-header-group;
+  }
+  table tfoot {
+    display: table-footer-group;
+  }
+}

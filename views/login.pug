@@ -1,48 +1,68 @@
 doctype html
 html
-head
-    title= title
-    link(rel='stylesheet', href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
-    link(rel='stylesheet', type='text/css' href='/stylesheets/main.css')
-    link(rel='stylesheet', type='text/css' href='/stylesheets/admin.css')
+    head
+        title= title
+        link(rel='stylesheet', href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css")
+        link(rel="stylesheet", href="https://use.fontawesome.com/releases/v5.3.1/css/all.css")
+        link(rel='stylesheet', type='text/css' href='/stylesheets/login.css')
 
-body(style="overflow-y: hidden;overflow-x: hidden;")
-    .container
-        .con-block(style="margin-top: 15%")
-            .row 
-                .col( style='font-size: 31px; margin:13px;')
-                    span(style='float:right') &nbsp;น.
-                    span(id='time', style='float:right;')
-                    
-            .row.flex-c-m
-                form(action="/wspx", method="post")
+    body(style="overflow-y: hidden;overflow-x: hidden;")
+        section.material-half-bg
+            .cover
+        section.login-content
+            .logo 
+                h1 Warehouse System
+            .login-box
+                form.login-form(action="/wspx", method="post")
+                    h3.login-head(style="font-family: 'TH SarabunNew', tahoma, 'sans-serif' !important;")
+                        i.far.fa-user-circle(style='margin:7px;')
+                        span เข้าสู่ระบบ
                     .form-group.col-12
-                        label userName
-                        input.form-control.ui-buttonx.trans-2.border-r-10(type="text", name="logusername", required, placeholder="user ID")
+                        label.thNews ชื่อผู้ใช้งาน
+                        input.form-control.ui-buttonx.trans-2.border-r-10(type="text", name="logusername", required, placeholder="username")
                     .form-group.col-12
-                        label passw0rd
-                        input.form-control.ui-buttonx.trans-2.border-r-10(type="password", name="logpassword", required, placeholder="password")
+                        label.thNews รหัสผ่าน
+                        input.form-control.ui-buttonx.trans-2.border-r-10(type="password", name="logpassword", required, placeholder="password")                        
+                    .form-group.col-12
+                        button.btn.btn-block.btn-dark.p-all-10.border-r-10(type='submit', style='float:right').thNews เข้าสู่ระบบ     
+            
+        //- 
+            .container
+                .con-block(style="margin-top: 15%")
+                    .row 
+                        .col( style='font-size: 31px; margin:13px;')
+                            span(style='float:right') &nbsp;น.
+                            span(id='time', style='float:right;')
+                            
+                    .row.flex-c-m
+                        form(action="/wspx", method="post")
+                            .form-group.col-12
+                                label userName
+                                input.form-control.ui-buttonx.trans-2.border-r-10(type="text", name="logusername", required, placeholder="user ID")
+                            .form-group.col-12
+                                label passw0rd
+                                input.form-control.ui-buttonx.trans-2.border-r-10(type="password", name="logpassword", required, placeholder="password")
 
-                        
-                    .form-group.col-12
-                        button.btn.btn-dark.p-all-10.border-r-10(type='submit', style='float:right') L0gin!                
+                                
+                            .form-group.col-12
+                                button.btn.btn-dark.p-all-10.border-r-10(type='submit', style='float:right') L0gin!                
 
-    script(src="/javascripts/jquery-3.2.1.min.js")
-    script(src='/javascripts/jquery.datetime.js')
-            //- .col-6 
-            //-     h3.txtth3 สมัคร
-            //-     form(action='/loginx', method='post')  
-            //-         .form-group.col-12
-            //-             label E-mail
-            //-             input.form-control.ui-buttonx(type='email', name='email')
-            //-         .form-group.col-12
-            //-             label username
-            //-             input.form-control.ui-buttonx(type='text', name='username')
-            //-         .form-group.col-12
-            //-             label password
-            //-             input.form-control.ui-buttonx(type='text', name='password')
-            //-         .form-group.col-12
-            //-             label passwordConf
-            //-             input.form-control.ui-buttonx(type='text', name='passwordConf')
-            //-         .form-group.col-12
-            //-             button.btn.btn-primary(type='submit') สมัคร    
+        script(src="/javascripts/jquery-3.2.1.min.js")
+        script(src='/javascripts/jquery.datetime.js')
+                //- .col-6 
+                //-     h3.txtth3 สมัคร
+                //-     form(action='/loginx', method='post')  
+                //-         .form-group.col-12
+                //-             label E-mail
+                //-             input.form-control.ui-buttonx(type='email', name='email')
+                //-         .form-group.col-12
+                //-             label username
+                //-             input.form-control.ui-buttonx(type='text', name='username')
+                //-         .form-group.col-12
+                //-             label password
+                //-             input.form-control.ui-buttonx(type='text', name='password')
+                //-         .form-group.col-12
+                //-             label passwordConf
+                //-             input.form-control.ui-buttonx(type='text', name='passwordConf')
+                //-         .form-group.col-12
+                //-             button.btn.btn-primary(type='submit') สมัคร    

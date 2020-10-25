@@ -1,0 +1,106 @@
+extends layoutuser
+
+block content
+    .container-fluid
+        .row.bg-white
+            .col-12.mt-15
+                h3(style='font-family:"TH SarabunNew", tahoma, "sans-serif";') รายงานการเบิกวัสดุ
+        .row.mt-15
+            .col-12
+                form.form-group(name='form1')
+                    table.layout-c.thNews.bg-white(width='100%', border='1')
+                        tr(style='height:55px;')
+                            td 
+                                table(width='100%')
+                                    tr
+                                        td(style='padding:0px;')
+                                            i.fas.fa-users-cog.mr-7
+                                            if configUser
+                                                span= titleText
+                                            else
+                                                span ข้อมูลการเบิกวัสดุ
+                                        td(align='right', style='padding:0px;')
+                                            span ค้นหา : &nbsp;
+                                            select.custom-select.mr-7(name='order_status', style='width: 250px;') 
+                                                option(value='') ค้นหาตามสถานะ
+                                                option(value='Approve') อนุมัติ
+                                                option(value='Disapprove') ไม่อนุมัติ
+                                                option(value='Pending') รอ
+                                            button.btn.btn-success.export-excel(type='button')
+                                                i.far.fa-file-excel.mr-7
+                                                font.thNews ออก excel
+                        tr
+                            td(style='margin:10px;')
+                                table#reportx_itemwithdraw.table-bordered.mt-15(width='100%')
+                                    thead
+                                        tr
+                                            th เลขที่ใบเบิก
+                                            th ผู้เบิก
+                                            th วันที่ทำรายการ
+                                            th จำนวนเงิน
+                                            th สถานะ
+                                            th 
+
+
+
+
+                
+                
+                
+                
+                
+    .modal.fade.custom-modal#ajaxLargeModal(role="dialog", tabindex="-1", aria-labelledby="ajaxModalLabel" aria-hidden="true")
+        .modal-dialog.modal-lg(role='document')
+            .modal-content
+                //- .modal-header
+                //-     h5.modal-title Modal Title
+                //-     button.close(type='button', data-dismiss='modal', aria-label='Close')
+                //-         span(aria-hidden='true') x
+                //- .modal-body
+                //-     div HelloWorld
+                //- .modal-footer
+                //-     button.btn.btn-secondary(type='button', data-dissmiss='modal') ปิด
+                //-     button.btn.btn-primary(type='button') บันทึก
+
+
+
+
+    //- aside.thNews
+    //-     div.sidebar
+    //-         form.form-group(name='formEdit')
+    //-             table(width="100%")
+    //-                 tr(style='border-bottom: 1px solid #ced4da;background-color:#5f92de;')
+    //-                     td(style='color:white;padding:7px')
+    //-                         table(width='100%')
+    //-                             tr
+    //-                                 td#titleShow(style='padding:0px !important;')
+    //-                                 td.t-right(style='padding:0px !important;')
+    //-                 tr
+    //-                     td(style='padding:7px;')
+    //-                         table(width='100%', style='min-height:200px;')
+    //-                             tr
+    //-                                 td
+    //-                                     .form-group
+    //-                                         label ชื่อหมวดหมู่สินค้า*
+    //-                                         input.form-control(name='itemDescription', required, style='font-size:16pt !important;', onKeyup='this.value.length > 0 ? $(".text-validate").addClass("invisibility") : $(".text-validate").removeClass("invisibility")')
+    //-                                         span.text-validate.invisibility(style='font-size:14pt;color:red;') test
+    //-                             //- tr
+    //-                             //-     td ชื่อหมวดหมู่สินค้า*
+    //-                             //- tr
+    //-                             //-     td 
+    //-                             //-         input.form-control(name='itemDescription', required, style='font-size:16pt !important;')
+
+    //-                             tr
+    //-                                 td
+    //-                                     .form-group
+    //-                                         input.form-conrol(type='checkbox', name='itemStatus', style='display:inline-block;width:20px;')
+    //-                                         label สถานะ
+    //-                 tr
+    //-                     td(align='right')
+    //-                         button.btn-hide-sidebar.btn.btn-secondary.mr-7(style='color:white !important;', onClick="formEdit.itemDescription.value = '';formEdit.itemStatus.checked = false;") ปิด
+    //-                         a.btn-add-category.btn.btn-primary.mr-7(href='api/category/add', style='color:white !important;') เพิ่ม
+        //- .bg-white(style='width:200px;height:150px;position:fixed;z-index:999;left:590px;')
+
+block script
+    script(type='text/javascript', src='/javascripts/custom.js')
+    script(type='text/javascript', src='/javascripts/sheetjs-master/xlsx.full.min.js')

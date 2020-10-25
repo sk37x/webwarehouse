@@ -5,7 +5,7 @@ var Users = require('./userModel');
 var userslevels = require('./userlevelModel');
 var userspositions = require('./userPositionModel');
 var fschunk = require('./fs.pictureModel')[1];
-
+var fsfilesaves = require('./fsFileSave.js')
 var userDetailSchema = new Schema({
     firstname: {type: String, required: true, trim: true},
     lastname : { type: String, required: true, trim:true},
@@ -24,14 +24,15 @@ var userDetailSchema = new Schema({
     },
     image: {
         type: Schema.Types.ObjectId,
-        ref: 'fs.chunks'
+        ref: 'fsfilesaves'
     },
     dataCreate:{type : Date, default: Date.now()},
     status: {
         type: String,
         enum: ['Online', 'Offline'],
         default: 'Offline'
-    }
+    }, 
+    lastLogin : { type : Date }
 })
 
 var usersdetails = mongoose.model('usersdetails', userDetailSchema);

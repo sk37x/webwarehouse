@@ -10,6 +10,18 @@ html, body{
     width: 100%;
 }
 
+.material-half-bg {
+    /* height: 100vh; */
+    background-color: #e7e7e7;
+    background-image: url('../images/adventure-calm-clouds-414171.jpg');
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+  
 * {
     margin:0px;
     padding:0px;

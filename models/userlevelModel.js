@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema
 var userlvSchema = Schema({
-    _id: { type: Schema.Types.ObjectId },
+    // _id: { type: Schema.Types.ObjectId },
     userlevel: { type: String, refPath: 'Users' },
+    userLevelStatus: { type: Boolean },
     dateCreate: { type: Date, default: Date.now() }
 })
 
