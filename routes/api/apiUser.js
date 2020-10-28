@@ -165,13 +165,16 @@ router.get("/modal(/:_id)?(/:editpfile)?", async (req, res, next) => {
     var userLv = await userLevel.find({'userlevel' : {$in:['Admin', 'User'] }})
     var imageFile = null;
     // console.log(imageFile);
+    
+    
     let nowSession = '';
     if(req.params._id !== undefined) {
         let checkSession = await userDetail.findOne({'userlogin': req.session.userId}).populate('userlevel');
         nowSession = checkSession.userlevel.userlevel.toLowerCase();
         // console.log(nowSession);
         dataTable = await userDetail.findById(req.params._id).populate('userlogin').populate('image');
-        titleText = "cก้ไขข้อมูล : " + dataTable.userlogin.username;
+        
+        titleText = "แก้ไขข้อมูล : " + dataTable.userlogin.username;
         btnText = 'แก้ไข';
         eventText = 'edit';
         classBtnText = 'btn-add';

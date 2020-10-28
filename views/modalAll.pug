@@ -69,16 +69,18 @@ if modalType === 'users'
                 .form-row.mb-15(style='margin-left:10px !important;margin-right: 10px !important;')
 
 
-
-                    - if(nowSession === 'admin')
-                        .col-6
-                            label ระดับผู้ใช้งาน
-                                font(color='red') &nbsp;*
-                            select.form-control(name='userlevel', style='font-size:14pt !important;', onChange="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
-                                option(value='') เลือกระดับผู้ใช้
-                                each value, index in userLv
-                                    option(value=value._id, selected=(data !== null ? (data.userlevel._id.toString() === value._id.toString() ? 'true' : false) : false))= value.userlevel
-                            span.invalid-feedback.error-block(data-from='userlevel') กรุณากรอกข้อมูล
+                    - if(nowSession)
+                        - if(nowSession === 'admin')
+                            .col-6
+                                label ระดับผู้ใช้งาน
+                                    font(color='red') &nbsp;*
+                                select.form-control(name='userlevel', style='font-size:14pt !important;', onChange="this.value.length > 0 ? ($(\"[data-from='\" + this.name +\"']\").removeClass(\"error\") && $(this).removeClass('is-invalid')) : '';")
+                                    option(value='') เลือกระดับผู้ใช้
+                                    each value, index in userLv
+                                        option(value=value._id, selected=(data !== null ? (data.userlevel._id.toString() === value._id.toString() ? 'true' : false) : false))= value.userlevel
+                                span.invalid-feedback.error-block(data-from='userlevel') กรุณากรอกข้อมูล
+                        - else 
+                            input(type='hidden', name='userlevel', value=data.userlevel._id)
                     .col-6
                         label(style='margin-right: 7px;') อัพโหลดรูปภาพ
                         br
