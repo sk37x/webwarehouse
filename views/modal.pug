@@ -18,7 +18,7 @@
             button.close(type='button', data-dismiss='modal', aria-label='Close')
                 span(aria-hidden='true') x
         .modal-body
-            fieldset(disabled=(userRole.toLowerCase() === 'admin' ? false : true))
+            fieldset(disabled=(userRole.toLowerCase() === 'admin' ? used ? true : false : true))
                 .form-row
                     .form-group.col-6     
                         label รหัสสินค้า 
@@ -78,8 +78,9 @@
                             img#preview(src=(productDetail ? productDetail.imageEncode : ''), height=(productDetail ? (productDetail.imageEncode ? '150' : false) : false), width=(productDetail ? (productDetail.imageEncode ? '150' : false) : false))
                 .form-row
                     .form-group.col-6 
-                        input.mr-7(type='checkbox', name='product_status', checked=(productDetail ? productDetail.status : ''))
+                        input.mr-7(type='checkbox', name='product_status', checked=(productDetail ? productDetail.product_status : false))
                         label สถานะ
+                        
             .modal-footer
                 button.btn.btn-secondary(type='button', data-dismiss='modal') ปิด
                 - if(userRole.toLowerCase() === 'admin')

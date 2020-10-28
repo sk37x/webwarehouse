@@ -67,7 +67,7 @@ html(lang="th")
                                     when 'approve'
                                         textTh อนุมัติ
                                         - break
-                                    when 'pending'
+                                    when 'disapprove'
                                         textTh ไม่อนุมัติ
                                         - break
                                 div(style='border-bottom:1px dotted black;width:50%')= textTh
@@ -89,6 +89,7 @@ html(lang="th")
                             - if(orderDetail) 
                                 - var sum = 0;
                                 each val, i in orderDetail
+                                    - var sumTotal = 0
                                     tr
                                         td.text-center= i + 1
                                         td= val.product_id.product_code
@@ -97,8 +98,9 @@ html(lang="th")
                                         td.text-right= addComma(val.product_id.product_price)
                                         td= unitC[val.product_id.product_unitCount]
                                         td.text-center= val.item_quantity
-                                        td.text-right= addComma(val.item_price)
-                                        - sum += parseFloat(val.item_price)
+                                        - sumTotal = parseInt(val.item_quantity) * parseFloat(val.item_price)
+                                        td.text-right= addComma(sumTotal)
+                                        - sum += parseFloat(sumTotal)
                                 tr
                                     td(colspan='7')
                                         span.float-right รวม 

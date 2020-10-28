@@ -81,7 +81,7 @@ $(document).ready( () => {
                         case 'approve':
                             renderStatus = "<span class='badge badge-success' style='font-size:16pt;'> อนุมัติ </span>"
                             break;
-                        case 'pending':
+                        case 'disapprove':
                             renderStatus = "<span class='badge badge-danger' style='font-size:16pt;'> ไม่อนุมัติ </span>"
                             break;
                     }
@@ -174,7 +174,7 @@ $(document).ready( () => {
                     case 'approve':
                         renderStatus = "<span class='badge badge-success' style='font-size:16pt;'> อนุมัติ </span>"
                         break;
-                    case 'pending':
+                    case 'disapprove':
                         renderStatus = "<span class='badge badge-danger' style='font-size:16pt;'> ไม่อนุมัติ </span>"
                         break;
                 }
@@ -252,8 +252,10 @@ $(document).ready( () => {
         {
             data: 'product_onStock',
             render: (data, type, row) => {
+                const percentCal = (parseInt(row['product_quantity']) * 10) / 100;
+                const classBadge = data < percentCal ? 'badge badge-danger' : 'badge badge-success';
                 return (`
-                    <span>${data}</span>
+                    <span class="${classBadge}">${data}</span>
                 `)
             }
         },

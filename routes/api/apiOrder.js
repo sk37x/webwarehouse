@@ -20,6 +20,10 @@ router.post('/changestatus/:_id', (req, res, next) => {
     orderMain.findByIdAndUpdate(req.params._id, {'order_status':req.body.changeStatus, order_confirm_by:req.body.userId}, (err, doc) => {
         console.log(doc)
     })
+    // orderMain.findById(req.params._id, (err, doc) => {
+    //     if(err) console.log(err);
+    //     console.log(doc);
+    // })
     res.send('test')
 })
 
@@ -105,7 +109,7 @@ router.post('/add', async(req, res, next) => {
                 if(doc) {
                     res.status(200).json({data:'dataexists', action:'error'});
                 } else {
-                    res.status(200).json({data:'success', action:'addX2'});
+                    res.status(200).json({data:'success', action:'add'});
                     let doc2 = new orderMain({...req.body, order_status:'Pending'})
                     doc2.save((err, data) => {
                         if(err) {

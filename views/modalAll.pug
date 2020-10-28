@@ -125,7 +125,7 @@ if modalType === 'itemwithdraw'
                                 when 'approve'
                                     span.badge.badge-success.mr-7(style='font-size:16pt;') อนุมัติ
                                     - break
-                                when 'pending'
+                                when 'disapprove'
                                     span.badge.badge-danger.mr-7(style='font-size:16pt;') ไม่อนุมัติ
                                     - break
                             a(href='/backendx/print/'+data._id).thNews.btn.btn-primary.btn-print
@@ -234,3 +234,4 @@ if modalType === 'itemwithdraw'
                 - else 
                     button.btn.btn-primary(type='button', class=classBtn, data-action=eventText, data-editbyid=(data ? data._id : false))= btnText
             script(src='/javascripts/itemwithdraw.js')
+            //- script(type='text/javascript', src="https://cdn.jsdelivr.net/npm/sweetalert2@7.32.2/dist/sweetalert2.all.min.js")

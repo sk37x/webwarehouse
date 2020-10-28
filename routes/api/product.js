@@ -97,19 +97,21 @@ router.get('/table_product', async(req, res, next) => {
     let role = req.session.userlevel
     let filter = req.query.category_id !== undefined ? {'product_category' : req.query.category_id } : {};
     let listProduct = await product.find(filter).populate('product_category', itemCategory ).populate('product_image');
+    let checkOrder = await orderDetail.find({})
     listProduct.role = role
-    console.log(listProduct);
-    // for(let i = 0;i< listProduct.length; i++) {
-    //     if(listProduct[i].product_image !== null) {
-    //         let image = await fs.readFileSync(listProduct[i].product_image.path, 'base64')
-    //         let dataImage = 'data:' + listProduct[i].product_image.mimetype + ';base64,' + image
-    //         listProduct[i].image = dataImage;
-    //     }
-    // }
-    res.status(200).json({data:listProduct});
+    let newListProduct = listProduct.map((value, index) => {
+        let check = checkOrder.find(({product_id}) => value._id.toString() == product_id.toString())
+        if(check) {
+            value.used = true
+        } else {
+            value.used = false
+        }
+        return value;
+    })
+    res.status(200).json({data:newListProduct});
 })
 
-router.get("/(:_id)?(/:role)?", async(req, res, next) => {
+router.get("/(:_id)?(/:role)?(/:used)?", async(req, res, next) => {
     var pathComplie = path.join(__dirname, '../../views/modal.pug');
     var title, btn, action, edtiById;
     var pCategory = await allItem();
@@ -134,8 +136,7 @@ router.get("/(:_id)?(/:role)?", async(req, res, next) => {
     }
     
     // Compile a function
-    
-    var html = pug.renderFile(pathComplie, {title:title, btnText:btn, 'editById': edtiById, 'productCategory': pCategory, 'classBtn': 'btn-add-product', 'action': action, 'typed': "product", productDetail: findProduct, userRole: role });
+    var html = pug.renderFile(pathComplie, {title:title, btnText:btn, 'editById': edtiById, 'productCategory': pCategory, 'classBtn': 'btn-add-product', 'action': action, 'typed': "product", productDetail: findProduct, userRole: role, used: req.params.used });
     res.status(200).send(html);
 });
 

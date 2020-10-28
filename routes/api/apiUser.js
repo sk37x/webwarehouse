@@ -54,7 +54,7 @@ router.post('/showpass/:_id', async(req, res, next) => {
 router.post("/(:action)?(/:_id)?", upload.single('fileUpload'), async(req, res, next) => {
     if(req.params.action === 'add') {
         const checkUserExist = await user.find({'username': req.body.username})
-        console.log(checkUserExist);
+        // console.log(checkUserExist);
         if(checkUserExist.length === 0) {
             var userSave = {
                 _id: new ObjectId(),
@@ -65,10 +65,10 @@ router.post("/(:action)?(/:_id)?", upload.single('fileUpload'), async(req, res, 
             }
             user.create(userSave, (err, user) => {
                 if (err) {
-                    console.log(err)
+                    // console.log(err)
                     // return next(err)
                 } else {
-                    console.log(user)
+                    // console.log(user)
                     var userDetailx = {
                         firstname: req.body.firstname,
                         lastname: req.body.lastname,
@@ -82,15 +82,15 @@ router.post("/(:action)?(/:_id)?", upload.single('fileUpload'), async(req, res, 
                         userDetailx.image = FileSave._id;
                         fsfilesaves.create(FileSave, (err, data) => {
                             if(err) console.log(err);
-                            console.log(data);
+                            // console.log(data);
                         })
                         
                     }
                     userDetail.create(userDetailx, (err, userDetaill) => {
                         if (err) {
-                            console.log(err);
+                            // console.log(err);
                         } else {
-                            console.log(userDetaill);
+                            // console.log(userDetaill);
                         }
                     })
                 }
@@ -169,13 +169,15 @@ router.get("/modal(/:_id)?(/:editpfile)?", async (req, res, next) => {
     if(req.params._id !== undefined) {
         let checkSession = await userDetail.findOne({'userlogin': req.session.userId}).populate('userlevel');
         nowSession = checkSession.userlevel.userlevel.toLowerCase();
+        // console.log(nowSession);
         dataTable = await userDetail.findById(req.params._id).populate('userlogin').populate('image');
-        titleText = "แก้ไขข้อมูล : " + dataTable.userlogin.username;
+        titleText = "cก้ไขข้อมูล : " + dataTable.userlogin.username;
         btnText = 'แก้ไข';
         eventText = 'edit';
         classBtnText = 'btn-add';
         if(dataTable.image) imageFile = fs.readFileSync(dataTable.image.path, {encoding: 'base64'});
     } else {
+        nowSession = 'admin'
         titleText = "เพิ่มผู้ใช้ใหม่";
         btnText = 'บันทึก';
         eventText = 'add';

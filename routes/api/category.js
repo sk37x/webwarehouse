@@ -33,12 +33,12 @@ router.get('/table_category', async(req, res, next) => {
 router.post("/category(/:item_id)?", async (req, res, next) => {
   // let countDoc = await itemCategory.count({})
   let checkName = await itemCategory.find({'item_description': req.body.item_description}).exec();
-  console.log(checkName);
+  // console.log(checkName);
   if(checkName.length > 0) {
     res.status(200).json({'err':'manyItems', 'errDesc': req.body.item_description});
     return;
   }  else {
-    console.log('else')
+    // console.log('else')
     // next();
   }
   if (req.params.item_id === undefined) {
@@ -56,7 +56,7 @@ router.post("/category(/:item_id)?", async (req, res, next) => {
   } else {
     itemCategory.find({ _id: req.params.item_id }, (err, data) => {
       if (err) console.log(err);
-      console.log(data);
+      // console.log(data);
       res.status(200).json({ data: data });
     });
   }
@@ -64,12 +64,12 @@ router.post("/category(/:item_id)?", async (req, res, next) => {
 
 router.post("/category/edit/:_id", async(req, res, next) => {
   let checkName = await itemCategory.find({'item_description': req.body.item_description, '_id': {$ne: req.params._id}}).exec();
-  console.log(checkName);
+  // console.log(checkName);
   if(checkName.length > 0) {
-    console.log('inn')
+    // console.log('inn')
     res.status(200).json({'err':'manyItems', 'errDesc': req.body.item_description});
   }  else {
-    console.log('else')
+    // console.log('else')
     // next();
     itemCategory.findByIdAndUpdate(
       req.params._id,
@@ -82,7 +82,7 @@ router.post("/category/edit/:_id", async(req, res, next) => {
       },
       (err, data) => {
         if (err) {
-          console.log(err);
+          // console.log(err);
           res.status(500).send("fail");
         } else {
           res.status(200).send({data:"success"});
@@ -95,10 +95,10 @@ router.post("/category/edit/:_id", async(req, res, next) => {
 
 
 router.post("/category/delete/:_id", (req, res, next) => {
-    console.log(req.params._id);
+    // console.log(req.params._id);
     itemCategory.findByIdAndRemove(req.params._id, (err, data) => {
         if(err) {
-            console.log(err);
+            // console.log(err);
             res.status(500).json(err);
         } else {
             res.status(200).send('success');

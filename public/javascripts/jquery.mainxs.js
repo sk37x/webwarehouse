@@ -13,15 +13,15 @@ const callAPI = async(url, itemID = '', action = '') => {
 }
 
 const showSidebar = (elem) => {
-    console.log(elem);
+    // console.log(elem);
     $(elem).on('click', (e) => {
         e.preventDefault();
-        console.log("click")
+        // console.log("click")
     })
 }
 
 $('#ajaxLargeModalProfile, #ajaxLargeModalIndex').on('show.bs.modal', function (e) {
-    console.log(e)
+    // console.log(e)
     var link = $(e.relatedTarget);
     $(this).find('.modal-content').load(link.attr('href'))
     // $(this).find('.modal-content').load(link.attr('href'));
@@ -29,7 +29,7 @@ $('#ajaxLargeModalProfile, #ajaxLargeModalIndex').on('show.bs.modal', function (
 
 $('#ajaxLargeModalProfile, #ajaxLargeModalIndex').on('hidden.bs.modal', function (e) {
     // e.preventDefault()
-    console.log(e);
+    // console.log(e);
     $('.modal-content').empty();
     $(this).removeData('bs.modal');
 });
@@ -60,6 +60,14 @@ $(document).ready( ($) => {
                     data: 'item_status',
                     render: (data, type, row) => {
                         let statBox = row['item_status']  === 1 ? '<span class="fas fa-check"> </span>' : '<span class="fas fa-times"></span>' ;
+                        return statBox;
+                        // return statBox;
+                    }
+                },
+                {
+                    data: 'item_status',
+                    render: (data, type, row) => {
+                        let statBox = row['used'] !== 0 ? "<span class='badge badge-primary'>มีการใช้งาน</span>" : "<span class='badge badge-warning'>ยังไม่มีการใช้งาน</span>"
                         return statBox;
                         // return statBox;
                     }
@@ -121,7 +129,7 @@ $(document).ready( ($) => {
                         return result;
                     },
                     error: (err) => {
-                        console.log(err);
+                        // console.log(err);
                     }
                 }).responseJSON;
                 // console.log(res.data)
@@ -167,7 +175,7 @@ $(document).ready( ($) => {
             e.preventDefault();
         })
 
-
+  
 
         $('body').on('click', '.btn-add-category', async(e) => {
             e.preventDefault();
@@ -190,9 +198,9 @@ $(document).ready( ($) => {
                     }
                 })
                 
-                console.log(res);
+                // console.log(res);
                 if(e.target.dataset.action === 'edit') {
-                    console.log(res.data);
+                    // console.log(res.data);
                     if(res.data === 'success') {
                         $(sidebar).removeClass('show-sidebar');
                         $(ovlSidebar).removeClass('show-overlay-sidebar');
@@ -231,7 +239,7 @@ $(document).ready( ($) => {
                             tableCategory.ajax.reload();
                             formEdit.itemDescription.value = '';
                             formEdit.itemStatus.checked = false;
-                            console.log("HEYYYYYY")
+                            // console.log("HEYYYYYY")
                         })
                     }
                 }
@@ -243,6 +251,16 @@ $(document).ready( ($) => {
 
         })
 
+
+        const successConfirm = (strConf) => {
+            swal({
+                title: strConf,
+                icon: 'success',
+                text: " ",
+                button: false,
+                timer: 1000
+              })
+        }
         $('body').on('click', '.btn-approve', (e) => {
             swal({
                 title: "ยืนยันการทำรายการ ?",
@@ -255,26 +273,28 @@ $(document).ready( ($) => {
                     cancel: "ยกเลิก"
                 },
                 dangerMode: true,
-            }).then(async(value) => {
-                if(value === 'confirm'){       
-                    let url = gUrl + '/api/itemwithdraw/changestatus/' + e.currentTarget.dataset.orderid;
+            }).then((value) => {
+                if(value === 'confirm'){
+                    let url = gUrl + '/api/itemwithdraw/changestatus/' + e.target.dataset.orderid;
                     // console.log(url);
                     $.ajax({
                         url: url,
                         method: "POST", 
-                        data : {changeStatus: 'Approve', userId: e.currentTarget.dataset.userid},
+                        data : {changeStatus: 'Approve', userId: e.target.dataset.userid},
                         success: (result) => {
-                            console.log(result);
+                            // console.log(result);
                         }
                     })
-                    
+                    successConfirm('ยืนยันรายการเรียบร้อยแล้ว !')
+                    $('#ajaxLargeModal').modal('hide')
                 }
             })
         })
         $('body').on('click', '.btn-disapprove', (e) => {
+            $('#ajaxLargeModal').attr('tabindex', "")
             swal({
                 title: "ยืนยันการทำรายการ ?",
-                text: `ทำการอนุมัติรายการเบิก ${e.currentTarget.dataset.orderno}`,
+                text: `ไม่อนุมัติรายการเบิก ${e.currentTarget.dataset.orderno}`,
                 icon: "warning",
                 buttons: {
                     "ยืนยัน": {
@@ -283,17 +303,28 @@ $(document).ready( ($) => {
                     cancel: "ยกเลิก"
                 },
                 dangerMode: true,
-            }).then(async(value) => {
+                
+            }).then((value) => {
+                // console.log(value);
                 if(value === 'confirm'){       
-                    let url = gUrl + '/api/itemwithdraw/changestatus/' + e.currentTarget.dataset.orderid;
+                    let url = gUrl + '/api/itemwithdraw/changestatus/' + e.target.dataset.orderid;
                     $.ajax({
                         url: url,
                         method: "POST", 
-                        data : {changeStatus: 'disapprove', userId: e.currentTarget.dataset.userid},
+                        data : {changeStatus: 'disapprove', userId: e.target.dataset.userid},
                         success: (result) => {
-                            console.log(result);
+                            // console.log(result);
                         }
                     })
+                    successConfirm('ทำรายการเรียบร้อยแล้ว !')
+                    $('#ajaxLargeModal').attr('tabindex', -1)
+                    $('#ajaxLargeModal').modal('hide')
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1200)
+                } else {
+                    $('#ajaxLargeModal').attr('tabindex', -1)
+
                 }
             })
         })
@@ -334,7 +365,7 @@ $(document).ready( ($) => {
             }).then(async(value) => {
                 if(value === 'confirm'){       
                     let reqData = await callAPI(href, dataset.itemid, 'delete/');
-                    console.log(reqData);
+                    // console.log(reqData);
                     if(reqData === "success") {
                         swal({
                             title: "ลบข้อมูลเรียบร้อยแล้ว !",
@@ -389,7 +420,7 @@ $(document).ready( ($) => {
                 }
                 if(form.email.value.length > 0) {
                     let validate = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z0-9])(?:\.{0,11}[a-zA-Z0-9](?:[a-zA-Z0-9-]{1,61}[a-zA-Z0-9])?)*$/;
-                    console.log(validate.test(form.email.value));
+                    // console.log(validate.test(form.email.value));
                     if(!validate.test(form.email.value)) {
                         form.email.classList.add('is-invalid');
                         $('span[data-from="email"]').addClass('error');
@@ -462,7 +493,7 @@ $(document).ready( ($) => {
                     })        
                 } catch(err) {
     
-                    console.log(err)
+                    // console.log(err)
                     if(err.statusText === "Payload Too Large") {
                         swal({
                             title: "ไม่สามารถเพิ่มข้อมูลได้ !",
@@ -482,14 +513,14 @@ $(document).ready( ($) => {
             if(errCount > 0) return false;
             var formData = new FormData(form);
             formData.forEach((val, key, parent) => {
-                console.log(val, key, parent)
+                // console.log(val, key, parent)
             })
             // formData.test =  form.fileUpload.files[0];
             // formData.append('test', form.fileUpload.files[0]);
             // console.log(formData)
             // console.log(formData.getAll('test').values)
             let { typed, action, editbyid } = e.target.dataset;
-            console.log(editbyid)
+            // console.log(editbyid)
             let urlPost = !editbyid ? gUrl + '/api/users/' + action : gUrl + '/api/users/' + action +'/' + editbyid;
             // console.log(urlPost);
             // return false;
@@ -504,10 +535,10 @@ $(document).ready( ($) => {
                         return result;
                     }, 
                     error: (err) => {
-                        console.log(err);
+                        // console.log(err);
                     }
                 })
-                console.log(addData);
+                // console.log(addData);
                 // return false;
                 if(addData.data !== undefined) {
                     if (addData.action == 'edit') {

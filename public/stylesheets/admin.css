@@ -9,7 +9,19 @@
     font-size: 18pt !important;
     
 }
+#swal2-title {
+    font-family: "TH SarabunNew", tahoma, "sans-serif" !important;
+    font-size: 20pt !important;
+}
+#swal2-content {
+    font-family: "TH SarabunNew", tahoma, "sans-serif" !important;
+    font-size: 18pt !important;
+}
 
+.swal2-confirm, .swal2-cancel, .swal-button {
+    font-family: "TH SarabunNew", tahoma, "sans-serif" !important;
+    font-size: 14pt !important;
+}
 
 .canvasjs-chart-credit{
     visibility: hidden !important;

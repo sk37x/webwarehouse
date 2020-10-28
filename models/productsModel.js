@@ -31,7 +31,8 @@ var productSchema = mongoose.Schema({
     image : {
         type : String
     },
-    "role" : { type : String }
+    "role" : { type : String },
+    "used" : { type : Boolean}
 
 })
 
