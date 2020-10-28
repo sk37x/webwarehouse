@@ -302,7 +302,7 @@ router.get('/', async(req, res, next) => {
     // console.log(orderPendingTotal[0].populate('order_by.userlogin'));
     let userTotal = await userDetail.find({});
     let productTotal = await product.find({});
-    let counting = {orderTotal :orderTotal.length, orderPendingTotal:orderPendingTotal.length, userTotal:userTotal.length, productTotal:productTotal.length};
+    let counting = {orderTotal :orderTotal.length, orderPendingTotal:orderPendingTotal.length, userTotal:(userTotal.length - 1), productTotal:productTotal.length};
     let userLastLogin = await userDetail.find({'lastLogin' : {$ne : null}}).populate('userlogin').populate('image').sort({lastLogin: -1}).limit(4);
     req.session.userlevel.toLowerCase() === 'admin' ?
     res.render('ad-index', { title: "Home", ...counting, userLast: userLastLogin, orderPending : orderPendingTotal, userlv:req.session.userlevel, userData: userData}) :
