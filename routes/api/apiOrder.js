@@ -383,7 +383,8 @@ router.get("/table_data", async (req, res, next) => {
     var order = [];
     let filter = {};
     if(userlv === 'user') filter = {'order_by' : req.session.userDetailId};
-    order = await orderMain.find(filter).populate({path: 'order_by', populate: {path:'userlevel'}}) 
+    order = await orderMain.find(filter).populate({path: 'order_by', populate: {path:'userlevel'}}).sort({order_date: -1})
+    console.log(order);
     res.status(200).json({data:order})
 });
 
