@@ -32,6 +32,11 @@ $("#ajaxModal, #ajaxLargeModal").on("hidden.bs.modal", function (e) {
 $(document).ready(() => {
 	var col = [];
 	if (gClass == "reportx") gClass = gClass + "_" + gSubClass;
+	var sortCol = {
+		itemwithdraw:0,
+		reportx_itemwithdraw:2,
+		reportx_product:0,
+	}
 	var colType = {
 		itemwithdraw: [
 			{
@@ -372,7 +377,7 @@ $(document).ready(() => {
 		],
 	};
 	var searchData = {};
-
+	
 	var tablesx = $("#" + gClass).DataTable({
 		ajax: {
 			method: "GET",
@@ -385,7 +390,7 @@ $(document).ready(() => {
 			},
 		},
 		columns: colType[gClass],
-		order: [[0, "desc"]],
+		order: [[sortCol[gClass], "desc"]],
 	});
 
 	$("body").on("change", "select[name=order_status]", function (e) {

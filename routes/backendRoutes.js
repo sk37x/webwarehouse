@@ -299,13 +299,22 @@ router.get('/', async(req, res, next) => {
     let userData = await userDetail.findOne({ 'userlogin': req.session.userId }).populate('image').populate('userlevel').populate('userlogin');
     let orderTotal = await orderMain.find({});
     let orderPendingTotal = await orderMain.find({'order_status' : 'Pending'}).populate('order_by');
+    let orderPendingSort = orderPendingTotal.map((val) => {
+        let date = new Date(val.order_date).getTime()
+        val.orderSortByDate = date
+        return val
+    })
+    let _orderSort = orderPendingSort.sort((a, b) => {
+        return b.orderSortByDate - a.orderSortByDate
+    })
+    console.log(_orderSort)
     // console.log(orderPendingTotal[0].populate('order_by.userlogin'));
     let userTotal = await userDetail.find({});
     let productTotal = await product.find({});
     let counting = {orderTotal :orderTotal.length, orderPendingTotal:orderPendingTotal.length, userTotal:(userTotal.length - 1), productTotal:productTotal.length};
     let userLastLogin = await userDetail.find({'lastLogin' : {$ne : null}}).populate('userlogin').populate('image').sort({lastLogin: -1}).limit(4);
     req.session.userlevel.toLowerCase() === 'admin' ?
-    res.render('ad-index', { title: "Home", ...counting, userLast: userLastLogin, orderPending : orderPendingTotal, userlv:req.session.userlevel, userData: userData}) :
+    res.render('ad-index', { title: "Home", ...counting, userLast: userLastLogin, orderPending : _orderSort, userlv:req.session.userlevel, userData: userData}) :
     res.redirect('backendx/product');
 })
 

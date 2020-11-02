@@ -18,7 +18,9 @@ const orderMainSchema = mongoose.Schema({
     'createdDate': {type: Date, default: Date.now()},
     "revisedDate" : { type : Date, default: null },
     "revisor" : { type : String }, 
-    'order_confirm_by': {type : Schema.Types.ObjectId, ref : 'usersdetails'}
+    'order_confirm_by': {type : Schema.Types.ObjectId, ref : 'usersdetails'},
+    'orderSortByDate' : {type:Number}
+
 })
 
 var orderMain = mongoose.model('ordermains', orderMainSchema);
